@@ -199,6 +199,7 @@ public class ReitinhakuOhjelma extends Application {
             //  }
             double x = event.getX();
             double y = event.getY();
+            
             if (solmu1 == null) {
                 solmu1 = verkko.etsiSolmu(x, y);
             } else {
@@ -215,7 +216,7 @@ public class ReitinhakuOhjelma extends Application {
                 }
             }
 
-            //verkko.lisaaSolmu(x, y, "");
+           // verkko.lisaaSolmu(x, y, "");
             piirraTausta(gc);
             piirraSolmut(gc);
             piirraKaaret(gc);
