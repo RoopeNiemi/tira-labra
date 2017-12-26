@@ -13,18 +13,23 @@ package reitinhakuohjelma.rakenne;
 public class Kaari {
 
     private Solmu lahtoSolmu, paateSolmu;
-    private long paino;
+    private double paino,nopeus;
 
-    public Kaari(Solmu l, Solmu p, long paino) {
+    public Kaari(Solmu l, Solmu p, double paino,double nopeus) {
         this.lahtoSolmu = l;
         this.paateSolmu = p;
         this.paino = paino;
+        this.nopeus=nopeus;
     }
 
     public Solmu getLahtoSolmu() {
         return lahtoSolmu;
     }
 
+    public double getNopeus(){
+        return this.nopeus;
+    }
+    
     public void setLahtoSolmu(Solmu lahtoSolmu) {
         this.lahtoSolmu = lahtoSolmu;
     }
@@ -37,7 +42,7 @@ public class Kaari {
         this.paateSolmu = paateSolmu;
     }
 
-    public long getPaino() {
+    public double getPaino() {
         return paino;
     }
 

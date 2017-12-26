@@ -5,7 +5,9 @@
  */
 package reitinhakuohjelma.rakenne;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /**
@@ -18,9 +20,14 @@ public class Verkko {
     private int viimeisinSolmu = 0;
     private PriorityQueue<Solmu> jono;
     private HashSet<Integer> kaydyt;
+    private List<Kaari> kaaret = new ArrayList<>();
 
     public Verkko() {
 
+    }
+
+    public void lisaaKaari(Kaari k) {
+        kaaret.add(k);
     }
 
     public void lisaaSolmu(double x, double y, String s) {
@@ -28,7 +35,7 @@ public class Verkko {
         viimeisinSolmu++;
     }
 
-    public long shortestPath() {
+    public double shortestPath() {
 
         Dijkstra(this.verkko.length);
 
@@ -38,9 +45,43 @@ public class Verkko {
         return verkko[this.verkko.length - 1].getEtaisyys();
 
     }
-    
-    public int getVerkonKoko(){
+
+    public double laskeEtaisyys(double x1, double y1, double x2, double y2) {
+        double y3 = Math.abs(y2 - y1);
+        double x3 = Math.abs(x2 - x1);
+        double length = Math.sqrt(Math.pow(x3, 2) + Math.pow(y3, 2));
+        return length;
+
+    }
+
+    public int getVerkonKoko() {
         return this.viimeisinSolmu;
+    }
+
+    public Solmu etsiSolmu(double x, double y) {
+        for (int i = 0; i < getVerkonKoko(); i++) {
+            Solmu solmu = verkko[i];
+            if (x >= solmu.getX() && x <= solmu.getX() + 6) {
+                if (y >= solmu.getY() && y <= solmu.getY() + 6) {
+                    return solmu;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Solmu etsiSolmuArvolla(int arvo) {
+        for (int i = 0; i < getVerkonKoko(); i++) {
+            Solmu s = verkko[i];
+            if (s.getArvo() == arvo) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public List<Kaari> getKaaret() {
+        return this.kaaret;
     }
 
     private void Dijkstra(int n) {
@@ -72,7 +113,7 @@ public class Verkko {
         return this.verkko;
     }
 
-    private void relax(Solmu u, Solmu v, long paino) {
+    private void relax(Solmu u, Solmu v, double paino) {
         if (v.getEtaisyys() > u.getEtaisyys() + paino && paino != 30000000L) {
 
             v.setEtaisyys(u.getEtaisyys() + paino);

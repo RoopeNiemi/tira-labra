@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Solmu implements Comparable<Solmu> {
 
     private int arvo;
-    private long etaisyys;
+    private double etaisyys;
     private ArrayList<Kaari> vieruslista;
     private double x, y;
     private String nimi = "";
@@ -51,11 +51,11 @@ public class Solmu implements Comparable<Solmu> {
         this.arvo = arvo;
     }
 
-    public long getEtaisyys() {
+    public double getEtaisyys() {
         return etaisyys;
     }
 
-    public void setEtaisyys(long etaisyys) {
+    public void setEtaisyys(double etaisyys) {
         this.etaisyys = etaisyys;
     }
 
@@ -63,13 +63,13 @@ public class Solmu implements Comparable<Solmu> {
         return vieruslista;
     }
 
-    public void lisaaViereinenSolmu(Solmu s, long paino) {
-        vieruslista.add(new Kaari(this, s, paino));
+    public void lisaaViereinenSolmu(Solmu s, double paino,double kaarenNopeus) {
+        vieruslista.add(new Kaari(this, s, paino,kaarenNopeus));
     }
 
     @Override
     public int compareTo(Solmu t) {
-        long erotus = this.getEtaisyys() - t.getEtaisyys();
+        double erotus = this.getEtaisyys() - t.getEtaisyys();
         if (erotus > 0) {
             return 1;
         } else if (erotus == 0) {
