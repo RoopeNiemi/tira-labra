@@ -9,24 +9,28 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import reitinhakuohjelma.rakenne.Kaari;
 import reitinhakuohjelma.rakenne.Solmu;
@@ -46,6 +50,8 @@ public class ReitinhakuOhjelma extends Application {
     private Solmu solmu1 = null;
     private Solmu solmu2 = null;
     private double nopeus = 80;
+    private boolean valinta = false;
+    private ArrayDeque<Solmu> maalausPino = new ArrayDeque<>();
 /////Tallentaa solmut tekstitiedostoon jotta ne löytyy ohjelma käynnistettäessä///
 
     public void tallennaSolmut() {
@@ -76,10 +82,11 @@ public class ReitinhakuOhjelma extends Application {
                 double x = Double.parseDouble(solmunTiedot[0]);
                 double y = Double.parseDouble(solmunTiedot[1]);
                 String nimi = solmunTiedot[2];
+                int arvo = Integer.parseInt(solmunTiedot[3]);
                 if (!"NULL".equals(nimi)) {
                     kaupungit.add(nimi);
                 }
-                verkko.lisaaSolmu(x, y, nimi);
+                verkko.lisaaSolmu(x, y, nimi, arvo);
             });
         } catch (IOException ex) {
             Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
@@ -129,6 +136,14 @@ public class ReitinhakuOhjelma extends Application {
     public void start(Stage primaryStage) {
         lataaSolmut();
         lataaKaaret();
+        for (int i = 0; i < verkko.getVerkonKoko(); i++) {
+
+            for (int j = 0; j < verkko.getSolmut()[i].getVieruslista().size(); j++) {
+                System.out.print(verkko.getSolmut()[i].getVieruslista().get(j).getLahtoSolmu().getArvo() + "->"
+                        + verkko.getSolmut()[i].getVieruslista().get(j).getPaateSolmu().getArvo() + ", paino: " + verkko.getSolmut()[i].getVieruslista().get(j).getPaino() + ".");
+            }
+            System.out.println("");
+        }
         BorderPane borderPane = new BorderPane();
         Canvas tausta = new Canvas(600, 800);
         GraphicsContext gc = tausta.getGraphicsContext2D();
@@ -139,7 +154,7 @@ public class ReitinhakuOhjelma extends Application {
 //--------------------------------------------/////
         ///Käytetään vain solmuja luodessa////
         VBox leftBox = new VBox();
-        ToggleGroup nopeudet = new ToggleGroup();
+    /*    ToggleGroup nopeudet = new ToggleGroup();
         RadioButton kuus = new RadioButton("60");
         kuus.setToggleGroup(nopeudet);
         kuus.setOnAction(event -> {
@@ -170,61 +185,141 @@ public class ReitinhakuOhjelma extends Application {
         Button tallenna = new Button("Tallenna");
         tallenna.setOnAction(event -> {
             tallennaKaaret();
+        });*/
+        Label lahto = new Label("Lähtökaupunki");
+        TextField lahtoKaupunki = new TextField();
+        lahtoKaupunki.setOnAction(event -> {
+            solmu1 = verkko.etsiNimella(lahtoKaupunki.getText());
+            if (solmu1 != null) {
+                piirraTausta(gc);
+                piirraSolmut(gc);
+
+            }
+        }
+        );
+        Label maali = new Label("Destination");
+        TextField maaliKaupunki = new TextField();
+
+        maaliKaupunki.setOnAction(event -> {
+
+            solmu2 = verkko.etsiNimella(maaliKaupunki.getText());
+            if (solmu1 != null && solmu2 != null) {
+                maalausPino = verkko.shortestPath(solmu1, solmu2);
+
+                solmu1 = null;
+                solmu2 = null;
+                valinta = true;
+            }
+
+        }
+        );
+
+   /*     Button naytaHaku = new Button("Näytä");
+
+        naytaHaku.setOnAction(event
+                -> {
+            valinta = true;
+        }
+        );*/
+
+        Button reset = new Button("Reset");
+        reset.setOnAction(event -> {
+            solmu1 = null;
+            solmu2 = null;
+            piirraTausta(gc);
+            maaliKaupunki.setText("");
+            lahtoKaupunki.setText("");
         });
+
         //      leftBox.getChildren().add(nimiTeksti);
-        leftBox.getChildren().add(kuus);
-        leftBox.getChildren().add(seit);
-        leftBox.getChildren().add(kasi);
-        leftBox.getChildren().add(sata);
-        leftBox.getChildren().add(sataK);
-        leftBox.getChildren().add(tallenna);
+        //  leftBox.getChildren().add(kuus);
+        //  leftBox.getChildren().add(seit);
+        //  leftBox.getChildren().add(kasi);
+        //   leftBox.getChildren().add(sata);
+        //  leftBox.getChildren().add(sataK);
+        //leftBox.getChildren().add(tallenna);
         leftBox.setAlignment(Pos.CENTER);
+
+      //  leftBox.getChildren()
+       //         .add(naytaHaku);
+        leftBox.getChildren()
+                .add(lahto);
+        leftBox.getChildren()
+                .add(lahtoKaupunki);
+        leftBox.getChildren()
+                .add(maali);
+        leftBox.getChildren()
+                .add(maaliKaupunki);
+        leftBox.getChildren().add(reset);
         borderPane.setLeft(leftBox);
         //////////////////////////////
 
         Scene scene = new Scene(borderPane, 700, 900);
-        scene.setOnKeyPressed(event -> {
+
+        scene.setOnKeyPressed(event
+                -> {
             if (event.getCode() == KeyCode.F) {
                 solmu1 = null;
                 solmu2 = null;
                 piirraTausta(gc);
-                piirraSolmut(gc);
-                piirraKaaret(gc);
+                //  piirraSolmut(gc);
+                // piirraKaaret(gc);
             }
-        });
-        tausta.setOnMouseClicked(event -> {
+        }
+        );
+        tausta.setOnMouseClicked(event
+                -> {
             //   String nimi = "";
             //  if (!nimiTeksti.getText().isEmpty()) {
             //        nimi = nimiTeksti.getText();
             //  }
             double x = event.getX();
             double y = event.getY();
-            
+
             if (solmu1 == null) {
                 solmu1 = verkko.etsiSolmu(x, y);
+                piirraTausta(gc);
+                piirraSolmut(gc);
             } else {
                 solmu2 = verkko.etsiSolmu(x, y);
                 if (solmu2 != null) {
-                    double paino = verkko.laskeEtaisyys(solmu1.getX(), solmu1.getY(), solmu2.getX(), solmu2.getY());
+                    maalausPino = verkko.shortestPath(solmu1, solmu2);
 
-                    solmu1.lisaaViereinenSolmu(solmu2, paino, nopeus);
-                    solmu2.lisaaViereinenSolmu(solmu1, paino, nopeus);
-                    verkko.lisaaKaari(new Kaari(solmu1, solmu2, paino, nopeus));
                     solmu1 = null;
                     solmu2 = null;
-
+                    valinta = true;
                 }
             }
 
-           // verkko.lisaaSolmu(x, y, "");
-            piirraTausta(gc);
-            piirraSolmut(gc);
-            piirraKaaret(gc);
+            // verkko.lisaaSolmu(x, y, "");
+            //   piirraKaaret(gc);
             //   nimiTeksti.setText("");
+        }
+        );
+        new AnimationTimer() {
+            long prev = 0;
 
-        });
+            @Override
+            public void handle(long now) {
+                if (now - prev < 1000000) {
+                    return;
+                }
+                prev = now;
+                if (valinta) {
+                    if (!maalausPino.isEmpty()) {
+                        Solmu s = maalausPino.pollFirst();
+                        piirraSolmu(gc, s);
+                    } else {
+                        valinta = false;
+
+                    }
+                }
+
+            }
+        }.start();
 //--------------------------------------------/////
         primaryStage.setScene(scene);
+
         primaryStage.show();
     }
 
@@ -239,9 +334,17 @@ public class ReitinhakuOhjelma extends Application {
         gc.drawImage(kartta, 0, 0);
     }
 
+    public void maalaaProsessi(GraphicsContext gc, Stack<Solmu> st) {
+        while (!st.isEmpty()) {
+            Solmu s = st.pop();
+            gc.setFill(s.getColor());
+            gc.fillOval(s.getX() - 3, s.getY() - 3, 6, 6);
+        }
+    }
+
     public void piirraKaaret(GraphicsContext gc) {
         gc.setStroke(Color.BLUE);
-        gc.setLineWidth(3);
+        gc.setLineWidth(1);
         for (int i = 0; i < verkko.getKaaret().size(); i++) {
             double x1 = verkko.getKaaret().get(i).getLahtoSolmu().getX();
             double y1 = verkko.getKaaret().get(i).getLahtoSolmu().getY();
@@ -260,14 +363,27 @@ public class ReitinhakuOhjelma extends Application {
         }
     }
 
+    public void piirraReitti(GraphicsContext gc, Stack<Solmu> c) {
+        gc.setFill(Color.BLACK);
+        while (!c.isEmpty()) {
+            Solmu s = c.pop();
+            gc.fillOval(s.getX() - 3, s.getY() - 3, 6, 6);
+        }
+    }
+
+    public void piirraSolmu(GraphicsContext gc, Solmu s) {
+        gc.setFill(s.getColor());
+        gc.fillOval(s.getX() - 3, s.getY() - 3, 6, 6);
+    }
+
     public void piirraSolmut(GraphicsContext gc) {
         Solmu[] solmut = verkko.getSolmut();
         gc.setFill(Color.RED);
         for (int i = 0; i < verkko.getVerkonKoko(); i++) {
             if (solmut[i].getNimi().equals("NULL")) {
-                gc.setFill(Color.YELLOW);
+                gc.setFill(Color.WHITE);
             } else {
-                gc.setFill(Color.RED);
+                gc.setFill(Color.WHITE);
             }
             gc.fillOval(solmut[i].getX() - 3, solmut[i].getY() - 3, 6, 6);
         }

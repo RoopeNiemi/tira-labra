@@ -1,6 +1,7 @@
 package reitinhakuohjelma.rakenne;
 
 import java.util.ArrayList;
+import javafx.scene.paint.Color;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,6 +19,7 @@ public class Solmu implements Comparable<Solmu> {
     private ArrayList<Kaari> vieruslista;
     private double x, y;
     private String nimi = "";
+    private Color color = Color.WHITE;
 
     public Solmu(int arvo, double x, double y, String nimi) {
         this.etaisyys = Long.MAX_VALUE;
@@ -32,21 +34,29 @@ public class Solmu implements Comparable<Solmu> {
         return arvo;
     }
 
+    public Color getColor(){
+        return this.color;
+    }
+    
+    public void setColor(Color c){
+        this.color=c;
+    }
+    
     public String getNimi() {
-        if(nimi.isEmpty()){
+        if (nimi.isEmpty()) {
             return "NULL";
         }
         return this.nimi;
     }
 
-    public double getX(){
+    public double getX() {
         return this.x;
     }
-    
-    public double getY(){
+
+    public double getY() {
         return this.y;
     }
-    
+
     public void setArvo(int arvo) {
         this.arvo = arvo;
     }
@@ -63,8 +73,8 @@ public class Solmu implements Comparable<Solmu> {
         return vieruslista;
     }
 
-    public void lisaaViereinenSolmu(Solmu s, double paino,double kaarenNopeus) {
-        vieruslista.add(new Kaari(this, s, paino,kaarenNopeus));
+    public void lisaaViereinenSolmu(Solmu s, double paino, double kaarenNopeus) {
+        vieruslista.add(new Kaari(this, s, paino, kaarenNopeus));
     }
 
     @Override
