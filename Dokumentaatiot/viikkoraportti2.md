@@ -16,5 +16,5 @@ Dijkstran toiminta tehty, toimii kaupunkien nimien perusteella. Testattu kymmeni
 
 #### Muuta
 Vaikeuksia ei juurikaan ollut sillä solmujen ja kaarien lisääminen oli suhteellisen mekaanista klikkailua. Ongelmia tuli kun kaupunkien nimet sekoilivat jostain syystä, ja piti kirjoittaa ne uusiksi. Lisäksi päänvaivaa aiheutti ääkkösten toimimattomuus. 
-Aikaa käyttänyt tällä viikolla noin 15h.
+Aikaa käyttänyt tällä viikolla noin 15h. Seuraavaksi tarkoitus tehdä A* algoritmi.
 
