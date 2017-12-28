@@ -42,18 +42,21 @@ import reitinhakuohjelma.rakenne.Verkko;
  */
 public class ReitinhakuOhjelma extends Application {
 
-    private Image kartta = new Image(getClass().getResourceAsStream("kartta.png"));
+    private final Image kartta = new Image(getClass().getResourceAsStream("kartta.png"));
     private Verkko verkko = new Verkko();
-    private String tallennetutSolmut = "Solmut.txt";
-    private String tallennetutKaaret = "Kaaret.txt";
-    private List<String> kaupungit = new ArrayList<>();
+    private final String tallennetutSolmut = "Solmut.txt";
+    private final String tallennetutKaaret = "Kaaret.txt";
     private Solmu solmu1 = null;
     private Solmu solmu2 = null;
     private double nopeus = 80;
     private boolean valinta = false;
     private ArrayDeque<Solmu> maalausPino = new ArrayDeque<>();
-/////Tallentaa solmut tekstitiedostoon jotta ne löytyy ohjelma käynnistettäessä///
 
+
+
+    /**
+     *Tallentaa solmut tekstitiedostoon Solmut.txt. 
+     */
     public void tallennaSolmut() {
         List<String> lista = new ArrayList<>();
         Solmu[] solmut = verkko.getSolmut();
@@ -74,7 +77,11 @@ public class ReitinhakuOhjelma extends Application {
 
     }
 
-////Lataa solmut tekstitiedostosta verkon solmuiksi////
+
+
+    /**
+     *Lataa solmut tekstitiedostosta Solmut.txt verkon solmuiksi.
+     */
     public void lataaSolmut() {
         try {
             Files.lines(Paths.get(tallennetutSolmut)).forEach(s -> {
@@ -82,10 +89,7 @@ public class ReitinhakuOhjelma extends Application {
                 double x = Double.parseDouble(solmunTiedot[0]);
                 double y = Double.parseDouble(solmunTiedot[1]);
                 String nimi = solmunTiedot[2];
-                int arvo = Integer.parseInt(solmunTiedot[3]);
-                if (!"NULL".equals(nimi)) {
-                    kaupungit.add(nimi);
-                }
+                int arvo = Integer.parseInt(solmunTiedot[3]);          
                 verkko.lisaaSolmu(x, y, nimi, arvo);
             });
         } catch (IOException ex) {
@@ -93,6 +97,10 @@ public class ReitinhakuOhjelma extends Application {
         }
     }
 
+
+    /**
+     *Tallentaa kaaret tekstitiedostoon Kaaret.txt
+     */
     public void tallennaKaaret() {
         List<Kaari> kaaret = verkko.getKaaret();
         List<String> kaaretTeksti = new ArrayList<>();
@@ -113,6 +121,10 @@ public class ReitinhakuOhjelma extends Application {
         }
     }
 
+
+    /**
+     *Lataa kaaret tekstitiedostosta Kaaret.txt
+     */
     public void lataaKaaret() {
         try {
             Files.lines(Paths.get(tallennetutKaaret)).forEach(k -> {
@@ -262,27 +274,35 @@ public class ReitinhakuOhjelma extends Application {
         }.start();
 
         Scene scene = new Scene(borderPane, 700, 900);
+        primaryStage.setResizable(false);
         primaryStage.setTitle("Reitinhaku");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
+    /**
+     * Piirtää taustakuvaksi kartta.png -kuvan, parametrina GraphicsContext gc
+     * @param gc
+     */
     public void piirraTausta(GraphicsContext gc) {
         gc.drawImage(kartta, 0, 0);
     }
 
-    public void maalaaProsessi(GraphicsContext gc, Stack<Solmu> st) {
-        while (!st.isEmpty()) {
-            Solmu s = st.pop();
-            gc.setFill(s.getColor());
-            gc.fillOval(s.getX() - 3, s.getY() - 3, 6, 6);
-        }
-    }
 
+
+
+    /**
+     * Piirtää verkon kaaret kartalle. Ei tällä hetkellä käytössä
+     * @param gc
+     */
     public void piirraKaaret(GraphicsContext gc) {
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
@@ -304,11 +324,21 @@ public class ReitinhakuOhjelma extends Application {
         }
     }
 
+    /**
+     * Piirtää yksittäisen solmun. Käytetään reitinhakualgoritmin käytön jälkeen.
+     * 
+     * @param gc
+     * @param s
+     */
     public void piirraSolmu(GraphicsContext gc, Solmu s) {
         gc.setFill(s.getColor());
         gc.fillOval(s.getX() - 3, s.getY() - 3, 6, 6);
     }
 
+    /**
+     * Piirtää kartalle kaikki solmut valkoisina. 
+     * @param gc
+     */
     public void piirraSolmut(GraphicsContext gc) {
         Solmu[] solmut = verkko.getSolmut();
         gc.setFill(Color.RED);

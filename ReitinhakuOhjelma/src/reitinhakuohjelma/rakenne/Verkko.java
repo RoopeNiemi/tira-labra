@@ -29,25 +29,58 @@ public class Verkko {
     private Stack<Solmu> rt = new Stack<>();
     private ArrayDeque<Solmu> prosessi = new ArrayDeque<>();
 
+    /**
+     *
+     */
     public Verkko() {
 
     }
 
+    /**
+     * Lisää verkolle kaaren kaarilistaan. Kyseistä kaarilistaa käytetään
+     * ainoastaan kun piirretään ruudulle kaikki kaaret
+     *
+     * @param k
+     */
     public void lisaaKaari(Kaari k) {
         kaaret.add(k);
     }
 
+    /**
+     * Resetoi lyhimmän reitin pinon sekä maalausjonon.
+     */
     public void resetoiMaalausjono() {
         this.rt.clear();
         this.prosessi.clear();
     }
 
+    /**
+     * Lisää verkoille solmut, AStar solmuille ja DijkstraSolmuille omat verkot
+     *
+     * @param x
+     * @param y
+     * @param s
+     * @param arvo
+     */
     public void lisaaSolmu(double x, double y, String s, int arvo) {
         verkko[arvo] = new DijkstraSolmu(arvo, x, y, s);
         verkko2[arvo] = new ASolmu(arvo, x, y, s);
         viimeisinSolmu++;
     }
 
+    /**
+     *  * Dijkstraa hyödyntävä lyhin reitti metodi. Etsii lyhimmän reitin Dijkstra-
+     * metodin avulla solmusta a solmuun b. Lisää solmuja erilliseen maalausjonoon jota käytetään
+     * hakuprosessia piirrettäessä. Solmun löytyessä ensimmäistä kertaa luodaan siitä kopio, joka 
+     * muutetaan keltaiseksi ja lisätään maalausjonoon. Kun solmun kaikki vierus-
+     * solmut käyty läpi, luodaan siitä kopio joka muutetaan punaiseksi ja lisätään maalausjonoon. 
+     * Kun Dijkstra-algoritmin toiminta loppuu, käydään vielä lyhin reitti läpi, jonka jokainen solmu muutetaan mustaksi
+     * ja lisätään maalausjonoon.
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     public ArrayDeque<Solmu> shortestPath(Solmu a, Solmu b) {
         rt = new Stack<>();
         Dijkstra(viimeisinSolmu - 1, a, b);
@@ -69,6 +102,19 @@ public class Verkko {
 
     }
 
+    /**
+     * AStaria hyödyntävä lyhin reitti metodi. Etsii lyhimmän reitin AStar-
+     * metodin avulla solmusta a solmuun b. Lisää solmuja erilliseen maalausjonoon jota käytetään
+     * hakuprosessia piirrettäessä. Solmun löytyessä ensimmäistä kertaa luodaan siitä kopio, joka 
+     * muutetaan keltaiseksi ja lisätään maalausjonoon. Kun solmun kaikki vierus-
+     * solmut käyty läpi, luodaan siitä kopio joka muutetaan punaiseksi ja lisätään maalausjonoon. 
+     * Kun AStar-algoritmin toiminta loppuu, käydään vielä lyhin reitti läpi, jonka jokainen solmu muutetaan mustaksi
+     * ja lisätään maalausjonoon.
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     public ArrayDeque<Solmu> AStarShortestPath(Solmu a, Solmu b) {
         rt = new Stack<>();
         AStar(a, b);
@@ -90,6 +136,13 @@ public class Verkko {
 
     }
 
+    /**
+     * Etsii solmua sen nimellä verkosta, jossa vain Dijkstrassa käytettävät
+     * solmut. Jos parametrin nimistä solmua ei ole palautetaan null.
+     *
+     * @param nimi
+     * @return
+     */
     public Solmu etsiDijkstraSolmuNimella(String nimi) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
@@ -100,6 +153,13 @@ public class Verkko {
         return null;
     }
 
+    /**
+     * Etsii solmua sen nimellä verkosta, jossa vain AStaria käytettävät solmut.
+     * Jos parametrin nimistä solmua ei ole palautetaan null.
+     *
+     * @param nimi
+     * @return
+     */
     public ASolmu EtsiASolmuNimella(String nimi) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             ASolmu s = verkko2[i];
@@ -110,6 +170,19 @@ public class Verkko {
         return null;
     }
 
+    /**
+     * Laskee kahden pisteen välisen etäisyyden kaavalla c^2=a^2+b^2, missä
+     * a=itseisarvo erotuksesta solmun1 x-koordinaatti-solmun2 x-koordinaatti,
+     * ja b=itseisarvo erotuksesta solmun1 y-koordinaatti-solmun2
+     * y-koordinaatti. Lopuksi palautetaan c:n neliöjuuri, joka on siis nyt
+     * etäisyys pikseleinä.
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
     public double laskeEtaisyys(double x1, double y1, double x2, double y2) {
         double y3 = Math.abs(y2 - y1);
         double x3 = Math.abs(x2 - x1);
@@ -118,22 +191,20 @@ public class Verkko {
 
     }
 
+    /**
+     * palauttaa verkon solmujen määrän
+     *
+     * @return
+     */
     public int getVerkonKoko() {
         return this.viimeisinSolmu;
     }
 
-    public Solmu etsiDijkstraSolmu(double x, double y) {
-        for (int i = 0; i < getVerkonKoko(); i++) {
-            Solmu solmu = verkko[i];
-            if (x >= solmu.getX() && x <= solmu.getX() + 6) {
-                if (y >= solmu.getY() && y <= solmu.getY() + 6) {
-                    return solmu;
-                }
-            }
-        }
-        return null;
-    }
-
+    /**
+     * nollaa prioriteettijonon, ja reitti Arrayn. Asettaa jokaisen Dijkstrasolmun
+     * etäisyydeksi 10000, ja aloitussolmun etäisyydeksi 0.
+     * @param aloitus
+     */
     public void alustaDijkstra(Solmu aloitus) {
         jono = new PriorityQueue<>();
         reitti = new Solmu[getVerkonKoko()];
@@ -143,6 +214,12 @@ public class Verkko {
         verkko[aloitus.getArvo()].setEtaisyys(0);
     }
 
+    /**
+     * Etsii verkosta, jossa vain Dijkstrassa käytettäviä solmuja, solmua jonka arvo
+     * annetaan parametrina.  Jos ei löydy, palauttaa null
+     * @param arvo
+     * @return
+     */
     public Solmu etsiDijkstraSolmuArvolla(int arvo) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
@@ -153,6 +230,12 @@ public class Verkko {
         return null;
     }
 
+    /**
+     * Etsii verkosta, jossa vain AStarissa käytettäviä solmuja, solmua jonka arvo
+     * annetaan parametrina.  Jos ei löydy, palauttaa null
+     * @param arvo
+     * @return
+     */
     public Solmu etsiASolmuArvolla(int arvo) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko2[i];
@@ -163,10 +246,19 @@ public class Verkko {
         return null;
     }
 
+    /**
+     * palauttaa jonossa solmuja, jotka lisätty Dijkstran ja AStarin suorituksen 
+     * yhteydessä maalausjonoon. 
+     * @return
+     */
     public ArrayDeque<Solmu> getProsessi() {
         return this.prosessi;
     }
 
+    /**
+     * Palauttaa verkon kaaret. Käytetään vain kun halutaan piirtää kaikki kaaret.
+     * @return
+     */
     public List<Kaari> getKaaret() {
         return this.kaaret;
     }
@@ -250,6 +342,10 @@ public class Verkko {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public Solmu[] getSolmut() {
         return this.verkko;
     }
