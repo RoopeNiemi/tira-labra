@@ -169,7 +169,7 @@ public class ReitinhakuOhjelma extends Application {
             }
 
         });
-        
+
         HBox napit = new HBox();
         napit.setAlignment(Pos.CENTER);
         napit.setSpacing(30);
@@ -187,6 +187,8 @@ public class ReitinhakuOhjelma extends Application {
         Button hae = new Button("Hae");
         hae.setOnAction(event -> {
             if (!lahtoKaupunki.getText().isEmpty() && !kohdeKaupunki.getText().isEmpty()) {
+                piirraTausta(gc);
+                piirraSolmut(gc);
                 solmu1 = verkko.etsiNimella(lahtoKaupunki.getText());
                 solmu2 = verkko.etsiNimella(kohdeKaupunki.getText());
                 if (solmu1 != null && solmu2 != null) {
@@ -246,7 +248,7 @@ public class ReitinhakuOhjelma extends Application {
                 }
             }
         }.start();
-        
+
         Scene scene = new Scene(borderPane, 700, 900);
         primaryStage.setTitle("Reitinhaku");
         primaryStage.setScene(scene);
