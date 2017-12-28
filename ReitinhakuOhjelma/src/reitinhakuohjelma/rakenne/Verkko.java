@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 public class Verkko {
 
     private Solmu[] verkko = new Solmu[2000];
+    private ASolmu[] verkko2 = new ASolmu[2000];
     private int viimeisinSolmu = 0;
     private PriorityQueue<Solmu> jono;
     private HashSet<Integer> kaydyt;
@@ -36,8 +37,14 @@ public class Verkko {
         kaaret.add(k);
     }
 
+    public void resetoiMaalausjono() {
+        this.rt.clear();
+        this.prosessi.clear();
+    }
+
     public void lisaaSolmu(double x, double y, String s, int arvo) {
-        verkko[arvo] = new Solmu(arvo, x, y, s);
+        verkko[arvo] = new DijkstraSolmu(arvo, x, y, s);
+        verkko2[arvo] = new ASolmu(arvo, x, y, s);
         viimeisinSolmu++;
     }
 
@@ -62,9 +69,40 @@ public class Verkko {
 
     }
 
-    public Solmu etsiNimella(String nimi) {
+    public ArrayDeque<Solmu> AStarShortestPath(Solmu a, Solmu b) {
+        rt = new Stack<>();
+        AStar(a, b);
+        Solmu r = b;
+        while (true) {
+            rt.push(r);
+            if (r == a) {
+                break;
+            }
+            r = reitti[r.getArvo()];
+        }
+
+        while (!rt.isEmpty()) {
+            Solmu ss = rt.pop();
+            ss.setColor(Color.BLACK);
+            prosessi.addLast(ss);
+        }
+        return prosessi;
+
+    }
+
+    public Solmu etsiDijkstraSolmuNimella(String nimi) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
+            if (s.getNimi().equalsIgnoreCase(nimi)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public ASolmu EtsiASolmuNimella(String nimi) {
+        for (int i = 0; i < getVerkonKoko(); i++) {
+            ASolmu s = verkko2[i];
             if (s.getNimi().equalsIgnoreCase(nimi)) {
                 return s;
             }
@@ -84,7 +122,7 @@ public class Verkko {
         return this.viimeisinSolmu;
     }
 
-    public Solmu etsiSolmu(double x, double y) {
+    public Solmu etsiDijkstraSolmu(double x, double y) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu solmu = verkko[i];
             if (x >= solmu.getX() && x <= solmu.getX() + 6) {
@@ -96,7 +134,7 @@ public class Verkko {
         return null;
     }
 
-    public void ISS(Solmu aloitus) {
+    public void alustaDijkstra(Solmu aloitus) {
         jono = new PriorityQueue<>();
         reitti = new Solmu[getVerkonKoko()];
         for (int i = 0; i < getVerkonKoko(); i++) {
@@ -105,9 +143,19 @@ public class Verkko {
         verkko[aloitus.getArvo()].setEtaisyys(0);
     }
 
-    public Solmu etsiSolmuArvolla(int arvo) {
+    public Solmu etsiDijkstraSolmuArvolla(int arvo) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
+            if (s.getArvo() == arvo) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public Solmu etsiASolmuArvolla(int arvo) {
+        for (int i = 0; i < getVerkonKoko(); i++) {
+            Solmu s = verkko2[i];
             if (s.getArvo() == arvo) {
                 return s;
             }
@@ -123,9 +171,51 @@ public class Verkko {
         return this.kaaret;
     }
 
+    private void AStar(Solmu aloitus, Solmu etsittava) {
+        alustaAStar(aloitus, etsittava);
+
+        jono.add(aloitus);
+        while (true) {
+            if (jono.isEmpty()) {
+                break;
+            }
+            Solmu u = jono.poll();
+            if (!kaydyt.contains(u.getArvo())) {
+                for (int i = 0; i < u.getVieruslista().size(); i++) {
+                    Solmu v = u.getVieruslista().get(i).getPaateSolmu();
+                    relax(u, v, u.getVieruslista().get(i).getPaino());
+                    if (!kaydyt.contains(v.getArvo())) {
+                        Solmu kopio = new ASolmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
+                        kopio.setColor(Color.YELLOW);
+                        prosessi.addLast(kopio);
+                    }
+                }
+
+                Solmu kopio = new ASolmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
+                kopio.setColor(Color.RED);
+                prosessi.addLast(kopio);
+                kaydyt.add(u.getArvo());
+                if (u.getArvo() == etsittava.getArvo()) {
+                    break;
+                }
+            }
+        }
+    }
+
+    private void alustaAStar(Solmu aloitus, Solmu etsittava) {
+        kaydyt = new HashSet<>();
+        jono = new PriorityQueue<>();
+        reitti = new Solmu[getVerkonKoko()];
+        for (int i = 0; i < getVerkonKoko(); i++) {
+            verkko2[i].setEtaisyys(10000);
+            verkko2[i].setEtaisyysMaalista(laskeEtaisyys(verkko2[i].getX(), verkko2[i].getY(), etsittava.getX(), etsittava.getY()));
+        }
+        verkko2[aloitus.getArvo()].setEtaisyys(0);
+    }
+
     private void Dijkstra(int n, Solmu aloitus, Solmu etsittava) {
         kaydyt = new HashSet<>();
-        ISS(aloitus);
+        alustaDijkstra(aloitus);
 
         jono.add(aloitus);
         while (true) {
@@ -140,13 +230,13 @@ public class Verkko {
                     Solmu v = u.getVieruslista().get(i).getPaateSolmu();
                     relax(u, v, u.getVieruslista().get(i).getPaino());
                     if (!kaydyt.contains(v.getArvo())) {
-                        Solmu kopio = new Solmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
+                        Solmu kopio = new DijkstraSolmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
                         kopio.setColor(Color.YELLOW);
                         prosessi.addLast(kopio);
                     }
 
                 }
-                Solmu kopio = new Solmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
+                Solmu kopio = new DijkstraSolmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
                 kopio.setColor(Color.RED);
                 prosessi.addLast(kopio);
                 kaydyt.add(u.getArvo());

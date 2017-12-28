@@ -1,91 +1,43 @@
-package reitinhakuohjelma.rakenne;
-
-import java.util.ArrayList;
-import javafx.scene.paint.Color;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package reitinhakuohjelma.rakenne;
+
+import java.util.ArrayList;
+import javafx.scene.paint.Color;
+
 /**
  *
  * @author User
  */
-public class Solmu implements Comparable<Solmu> {
+public interface Solmu {
 
-    private int arvo;
-    private double etaisyys;
-    private ArrayList<Kaari> vieruslista;
-    private double x, y;
-    private String nimi = "";
-    private Color color = Color.WHITE;
+    public int getArvo();
 
-    public Solmu(int arvo, double x, double y, String nimi) {
-        this.etaisyys = Long.MAX_VALUE;
-        this.vieruslista = new ArrayList<>();
-        this.x = x;
-        this.y = y;
-        this.nimi = nimi;
-        this.arvo = arvo;
-    }
+    public void setEtaisyysMaalista(double et);
 
-    public int getArvo() {
-        return arvo;
-    }
+    public double getEtaisyysMaalista();
 
-    public Color getColor(){
-        return this.color;
-    }
-    
-    public void setColor(Color c){
-        this.color=c;
-    }
-    
-    public String getNimi() {
-        if (nimi.isEmpty()) {
-            return "NULL";
-        }
-        return this.nimi;
-    }
+    public Color getColor();
 
-    public double getX() {
-        return this.x;
-    }
+    public void setColor(Color c);
 
-    public double getY() {
-        return this.y;
-    }
+    public String getNimi();
 
-    public void setArvo(int arvo) {
-        this.arvo = arvo;
-    }
+    public double getX();
 
-    public double getEtaisyys() {
-        return etaisyys;
-    }
+    public double getY();
 
-    public void setEtaisyys(double etaisyys) {
-        this.etaisyys = etaisyys;
-    }
+    public void setArvo(int arvo);
 
-    public ArrayList<Kaari> getVieruslista() {
-        return vieruslista;
-    }
+    public double getEtaisyys();
 
-    public void lisaaViereinenSolmu(Solmu s, double paino, double kaarenNopeus) {
-        vieruslista.add(new Kaari(this, s, paino, kaarenNopeus));
-    }
+    public void setEtaisyys(double etaisyys);
 
-    @Override
-    public int compareTo(Solmu t) {
-        double erotus = this.getEtaisyys() - t.getEtaisyys();
-        if (erotus > 0) {
-            return 1;
-        } else if (erotus == 0) {
-            return 0;
-        }
-        return -1;
-    }
+    public ArrayList<Kaari> getVieruslista();
+
+    public void lisaaViereinenSolmu(Solmu s, double paino, double kaarenNopeus);
 
 }
