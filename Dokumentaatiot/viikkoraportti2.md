@@ -1,7 +1,7 @@
 
 # Viikkoraportti 2
 
-Tällä viikolla tein käyttöliittymää. Ohjelmassa nyt taustakuva jonka perusteella lisätty solmut oikeisiin kohtiin. Lisäksi Dijkstran algoritmi toimii jo, ja sen käyttämistä varten luotu tekstikentät lähtökaupungille ja kohdekaupungille sekä "Hae"-nappi. 
+Tällä viikolla tein käyttöliittymää ja algoritmit. Ohjelmassa nyt taustakuva jonka perusteella lisätty solmut ja kaaret oikeisiin kohtiin. Dijkstra ja AStar algoritmit toimivat näitä solmuja ja kaaria hyödyntäen. Niiden käyttämistä varten luotu tekstikentät lähtökaupungille ja kohdekaupungille. Lisätty mahdollisuus valita kumpaa hakualgoritmia käyttää haussa, ja "Hae" ja "Reset" napit.  
 #### Solmuista
 Kaupunkisolmut nimetty, kaupunkeja 106 kappaletta, loput ovat nimeämättömiä solmuja teiden varsilla. Solmujen yhteismäärä 411 kappaletta. Solmut tekstitiedostossa muotoa x-koordinaatti, y-koordinaatti, nimi ("NULL" jos nimeämätön), ja arvo (käytetään kun tarkistetaan onko solmussa jo käyty, myöhemmin algoritmien yhteydessä). 
 
@@ -13,12 +13,13 @@ Alla kuva josta näkee ohjelmassa käytetyt nopeudet ja liikenneviraston sivuill
 ![alt text](https://github.com/RoopeNiemi/tira-labra/blob/master/Kuvia/nopeusrajoitusVertailu.png)
 
 #### Tietorakenteista
-Ohjelmassa on toteutettu Verkko, Solmu ja Kaari-luokat. Toimivat toistaiseksi valmiilla tietorakenteilla.
+Ohjelmassa on toteutettu Verkko, ASolmu, DijkstraSolmu ja Kaari-luokat. Toimivat toistaiseksi valmiilla tietorakenteilla. ASolmu ja DijkstraSolmut muuten samoja mutta ASolmun compareTo-metodi ottaa huomioon myös etäisyyden kohdesolmusta. ASolmu ja DijkstraSolmu molemmat hyödyntävät Solmu-rajapintaa. Koska solmuja on kahta erilaista luodaan näitä varten ohjelman käynnistyksen yhteydessä molemmille omat verkot ja vierussolmut.
 
-#### Dijkstrasta
-Dijkstran toiminta tehty, toimii kaupunkien nimien perusteella. Testattu kymmeniä kertoja ja tuntuu toimivan niin kuin pitääkin. Tekee haun ja jälkikäteen maalaa ajastimella hakuprosessin toiminnan jonka lopuksi maalaa lyhimmän polun solmut mustaksi. Nimihaku ei toimi ääkkösillä, vaan esim Kemijärvi pitää hakea muodossa Kemijarvi. 
+#### Dijkstrasta ja AStarista
+Dijkstran toiminta tehty, toimii kaupunkien nimien perusteella. Testattu kymmeniä kertoja ja tuntuu toimivan niin kuin pitääkin. Tekee haun ja jälkikäteen maalaa ajastimella hakuprosessin toiminnan jonka lopuksi maalaa lyhimmän polun solmut mustaksi. Nimihaku ei toimi ääkkösillä, vaan esim Kemijärvi pitää hakea muodossa Kemijarvi. AStar algoritmi myös lisätty. 
 
 #### Muuta
-Vaikeuksia ei juurikaan ollut sillä solmujen ja kaarien lisääminen oli suhteellisen mekaanista klikkailua. Ongelmia tuli kun kaupunkien nimet sekoilivat jostain syystä, ja piti kirjoittaa ne uusiksi. Lisäksi päänvaivaa aiheutti ääkkösten toimimattomuus. 
-Aikaa käyttänyt tällä viikolla noin 15h. Seuraavaksi tarkoitus tehdä A* algoritmi.
+Vaikeuksia ei juurikaan ollut sillä solmujen ja kaarien lisääminen oli suhteellisen mekaanista klikkailua. Ongelmia tuli kun kaupunkien nimet sekoilivat jostain syystä, ja piti kirjoittaa ne uusiksi. Lisäksi päänvaivaa aiheutti ääkkösten toimimattomuus. Ohjelman edistyminen vauhdittui huomattavasti solmujen ja kaarien luomisen jälkeen. 
+
+Aikaa käyttänyt tällä viikolla noin 18-20h. Seuraavaksi tarkoitus aloittaa omien tietorakenteiden teko.
 
