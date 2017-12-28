@@ -45,8 +45,11 @@ public class Verkko {
         rt = new Stack<>();
         Dijkstra(viimeisinSolmu - 1, a, b);
         Solmu r = b;
-        while (r != a) {
+        while (true) {
             rt.push(r);
+            if (r == a) {
+                break;
+            }
             r = reitti[r.getArvo()];
         }
 
