@@ -147,10 +147,13 @@ public class Verkko {
      * Etsii solmua sen nimellä verkosta. Jos parametrin nimistä solmua ei ole
      * palautetaan null.
      *
-     * @param nimi - Etsittävän solmun nimi
+     * @param nimi - Etsittävän solmun nimi. 
      * @return
      */
     public Solmu etsiSolmuNimella(String nimi) {
+        if(nimi.equalsIgnoreCase("null")){
+            return null;
+        }
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
             if (s.getNimi().equalsIgnoreCase(nimi)) {
