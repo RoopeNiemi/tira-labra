@@ -13,10 +13,10 @@ Alla kuva josta näkee ohjelmassa käytetyt nopeudet ja liikenneviraston sivuill
 ![alt text](https://github.com/RoopeNiemi/tira-labra/blob/master/Kuvia/nopeusrajoitusVertailu.png)
 
 #### Tietorakenteista
-Ohjelmassa on toteutettu Verkko, ASolmu, DijkstraSolmu ja Kaari-luokat. Toimivat toistaiseksi valmiilla tietorakenteilla. ASolmu ja DijkstraSolmut muuten samoja mutta ASolmun compareTo-metodi ottaa huomioon myös etäisyyden kohdesolmusta. ASolmu ja DijkstraSolmu molemmat hyödyntävät Solmu-rajapintaa. Koska solmuja on kahta erilaista luodaan näitä varten ohjelman käynnistyksen yhteydessä molemmille omat verkot ja vierussolmut.
+Ohjelmassa on toteutettu Verkko, Solmu ja Kaari-luokat. Toimivat toistaiseksi valmiilla tietorakenteilla. Solmu-oliota voidaan verrata toisiin solmuihin kahdella eri tavalla. Yhdestä tavasta toiseen vaihtaminen tapahtuu Solmun boolean muoto-attribuuttia muuttamalla, ja tämä tehdään Dijkstran tai AStarin suorituksen aluksi. 
 
 #### Dijkstrasta ja AStarista
-Dijkstran toiminta tehty, toimii kaupunkien nimien perusteella. Testattu kymmeniä kertoja ja tuntuu toimivan niin kuin pitääkin. Tekee haun ja jälkikäteen maalaa ajastimella hakuprosessin toiminnan jonka lopuksi maalaa lyhimmän polun solmut mustaksi. Nimihaku ei toimi ääkkösillä, vaan esim Kemijärvi pitää hakea muodossa Kemijarvi. AStar algoritmi myös lisätty. 
+Dijkstran toiminta tehty, toimii kaupunkien nimien perusteella. Testattu kymmeniä kertoja ja tuntuu toimivan niin kuin pitääkin. Tekee haun ja jälkikäteen maalaa ajastimella hakuprosessin toiminnan jonka lopuksi maalaa lyhimmän polun solmut mustaksi. Nimihaku ei toimi ääkkösillä, vaan esim Kemijärvi pitää hakea muodossa Kemijarvi. AStar algoritmi toimii myös. 
 
 #### Muuta
 Vaikeuksia ei juurikaan ollut sillä solmujen ja kaarien lisääminen oli suhteellisen mekaanista klikkailua. Ongelmia tuli kun kaupunkien nimet sekoilivat jostain syystä, ja piti kirjoittaa ne uusiksi. Lisäksi päänvaivaa aiheutti ääkkösten toimimattomuus. Ohjelman edistyminen vauhdittui huomattavasti solmujen ja kaarien luomisen jälkeen. 
