@@ -20,7 +20,6 @@ import javafx.scene.paint.Color;
 public class Verkko {
 
     private Solmu[] verkko = new Solmu[2000];
-    private ASolmu[] verkko2 = new ASolmu[2000];
     private int viimeisinSolmu = 0;
     private PriorityQueue<Solmu> jono;
     private HashSet<Integer> kaydyt;
@@ -40,7 +39,7 @@ public class Verkko {
      * Lisää verkolle kaaren kaarilistaan. Kyseistä kaarilistaa käytetään
      * ainoastaan kun piirretään ruudulle kaikki kaaret
      *
-     * @param k
+     * @param k lisättävä kaari
      */
     public void lisaaKaari(Kaari k) {
         kaaret.add(k);
@@ -55,31 +54,34 @@ public class Verkko {
     }
 
     /**
-     * Lisää verkoille solmut, AStar solmuille ja DijkstraSolmuille omat verkot
+     * Lisää verkolle solmun
      *
-     * @param x
-     * @param y
-     * @param s
-     * @param arvo
+     * @param x solmun x-koordinaatti
+     * @param y solmun y-koordinaatti
+     * @param s solmun nimi
+     * @param arvo solmun arvo
      */
     public void lisaaSolmu(double x, double y, String s, int arvo) {
-        verkko[arvo] = new DijkstraSolmu(arvo, x, y, s);
-        verkko2[arvo] = new ASolmu(arvo, x, y, s);
+        verkko[arvo] = new Solmu(arvo, x, y, s);
         viimeisinSolmu++;
     }
 
     /**
-     *  * Dijkstraa hyödyntävä lyhin reitti metodi. Etsii lyhimmän reitin Dijkstra-
-     * metodin avulla solmusta a solmuun b. Lisää solmuja erilliseen maalausjonoon jota käytetään
-     * hakuprosessia piirrettäessä. Solmun löytyessä ensimmäistä kertaa luodaan siitä kopio, joka 
-     * muutetaan keltaiseksi ja lisätään maalausjonoon. Kun solmun kaikki vierus-
-     * solmut käyty läpi, luodaan siitä kopio joka muutetaan punaiseksi ja lisätään maalausjonoon. 
-     * Kun Dijkstra-algoritmin toiminta loppuu, käydään vielä lyhin reitti läpi, jonka jokainen solmu muutetaan mustaksi
+     *  * Dijkstraa hyödyntävä lyhin reitti metodi. Alustaa aluksi verkon
+     * jokaiselle solmulle etäisyydeksi lähtö- solmusta 10 000 (aloitussolmulle
+     * 0).Tyhjentää alustuksessa prioriteettijonon ja luodut reitit. Etsii
+     * lyhimmän reitin Dijkstra- metodin avulla solmusta a solmuun b. Lisää
+     * solmuja erilliseen maalausjonoon jota käytetään hakuprosessia
+     * piirrettäessä. Solmun löytyessä ensimmäistä kertaa luodaan siitä kopio,
+     * joka muutetaan keltaiseksi ja lisätään maalausjonoon. Kun solmun kaikki
+     * vierus- solmut käyty läpi, luodaan siitä kopio joka muutetaan punaiseksi
+     * ja lisätään maalausjonoon. Kun Dijkstra-algoritmin toiminta loppuu,
+     * käydään vielä lyhin reitti läpi, jonka jokainen solmu muutetaan mustaksi
      * ja lisätään maalausjonoon.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a solmu josta haetaan lyhintä reittiä
+     * @param b solmu johon haetaan lyhin reitti
+     * @return hakuprosessin aikana syntynyt maalausjono
      */
     public ArrayDeque<Solmu> shortestPath(Solmu a, Solmu b) {
         rt = new Stack<>();
@@ -103,17 +105,22 @@ public class Verkko {
     }
 
     /**
-     * AStaria hyödyntävä lyhin reitti metodi. Etsii lyhimmän reitin AStar-
-     * metodin avulla solmusta a solmuun b. Lisää solmuja erilliseen maalausjonoon jota käytetään
-     * hakuprosessia piirrettäessä. Solmun löytyessä ensimmäistä kertaa luodaan siitä kopio, joka 
-     * muutetaan keltaiseksi ja lisätään maalausjonoon. Kun solmun kaikki vierus-
-     * solmut käyty läpi, luodaan siitä kopio joka muutetaan punaiseksi ja lisätään maalausjonoon. 
-     * Kun AStar-algoritmin toiminta loppuu, käydään vielä lyhin reitti läpi, jonka jokainen solmu muutetaan mustaksi
-     * ja lisätään maalausjonoon.
+     * AStaria hyödyntävä lyhin reitti metodi. Alustaa aluksi verkon jokaiselle
+     * solmulle etäisyydeksi lähtö- solmusta 10 000 (aloitussolmulle 0). Laskee
+     * joka solmun etäisyyden kohdesolmuun ja päivittää tämän avulla solmun
+     * etäisyysMaalista attribuutin. Tyhjentää alustuksessa prioriteettijonon ja
+     * luodut reitit. Etsii lyhimmän reitin AStar-metodin avulla solmusta a
+     * solmuun b. Lisää solmuja erilliseen maalausjonoon jota käytetään
+     * hakuprosessia piirrettäessä. Solmun löytyessä ensimmäistä kertaa luodaan
+     * siitä kopio, joka muutetaan keltaiseksi ja lisätään maalausjonoon. Kun
+     * solmun kaikki vierus- solmut käyty läpi, luodaan siitä kopio joka
+     * muutetaan punaiseksi ja lisätään maalausjonoon. Kun AStar-algoritmin
+     * toiminta loppuu, käydään vielä lyhin reitti läpi, jonka jokainen solmu
+     * muutetaan mustaksi ja lisätään maalausjonoon.
      *
-     * @param a
-     * @param b
-     * @return
+     * @param a solmu josta haetaan lyhintä reittiä
+     * @param b solmu johon haetaan lyhin reitti
+     * @return hakuprosessin aikana syntynyt maalausjono
      */
     public ArrayDeque<Solmu> AStarShortestPath(Solmu a, Solmu b) {
         rt = new Stack<>();
@@ -137,13 +144,13 @@ public class Verkko {
     }
 
     /**
-     * Etsii solmua sen nimellä verkosta, jossa vain Dijkstrassa käytettävät
-     * solmut. Jos parametrin nimistä solmua ei ole palautetaan null.
+     * Etsii solmua sen nimellä verkosta. Jos parametrin nimistä solmua ei ole
+     * palautetaan null.
      *
-     * @param nimi
+     * @param nimi - Etsittävän solmun nimi
      * @return
      */
-    public Solmu etsiDijkstraSolmuNimella(String nimi) {
+    public Solmu etsiSolmuNimella(String nimi) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
             if (s.getNimi().equalsIgnoreCase(nimi)) {
@@ -154,34 +161,17 @@ public class Verkko {
     }
 
     /**
-     * Etsii solmua sen nimellä verkosta, jossa vain AStaria käytettävät solmut.
-     * Jos parametrin nimistä solmua ei ole palautetaan null.
-     *
-     * @param nimi
-     * @return
-     */
-    public ASolmu EtsiASolmuNimella(String nimi) {
-        for (int i = 0; i < getVerkonKoko(); i++) {
-            ASolmu s = verkko2[i];
-            if (s.getNimi().equalsIgnoreCase(nimi)) {
-                return s;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Laskee kahden pisteen välisen etäisyyden kaavalla c^2=a^2+b^2, missä
-     * a=itseisarvo erotuksesta solmun1 x-koordinaatti-solmun2 x-koordinaatti,
-     * ja b=itseisarvo erotuksesta solmun1 y-koordinaatti-solmun2
+     * a=itseisarvo erotuksesta solmun2 x-koordinaatti-solmun1 x-koordinaatti,
+     * ja b=itseisarvo erotuksesta solmun2 y-koordinaatti-solmun1
      * y-koordinaatti. Lopuksi palautetaan c:n neliöjuuri, joka on siis nyt
      * etäisyys pikseleinä.
      *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     * @return
+     * @param x1 solmun 1 x-koordinaatti
+     * @param y1 solmun 1 y-koordinaatti
+     * @param x2 solmun 2 x-koordinaatti
+     * @param y2 solmun 2 y-koordinaatti
+     * @return solmujen välinen etäisyys
      */
     public double laskeEtaisyys(double x1, double y1, double x2, double y2) {
         double y3 = Math.abs(y2 - y1);
@@ -192,35 +182,31 @@ public class Verkko {
     }
 
     /**
-     * palauttaa verkon solmujen määrän
      *
-     * @return
+     * @return verkon solmujen määrän
      */
     public int getVerkonKoko() {
         return this.viimeisinSolmu;
     }
 
-    /**
-     * nollaa prioriteettijonon, ja reitti Arrayn. Asettaa jokaisen Dijkstrasolmun
-     * etäisyydeksi 10000, ja aloitussolmun etäisyydeksi 0.
-     * @param aloitus
-     */
-    public void alustaDijkstra(Solmu aloitus) {
+    private void alustaDijkstra(Solmu aloitus) {
         jono = new PriorityQueue<>();
         reitti = new Solmu[getVerkonKoko()];
         for (int i = 0; i < getVerkonKoko(); i++) {
-            verkko[i].setEtaisyys(10000);
+            verkko[i].setEtaisyysLahdosta(10000);
+            verkko[i].setMuoto(false);
         }
-        verkko[aloitus.getArvo()].setEtaisyys(0);
+        verkko[aloitus.getArvo()].setEtaisyysLahdosta(0);
     }
 
     /**
-     * Etsii verkosta, jossa vain Dijkstrassa käytettäviä solmuja, solmua jonka arvo
-     * annetaan parametrina.  Jos ei löydy, palauttaa null
-     * @param arvo
-     * @return
+     * Etsii verkosta solmua jonka arvo annetaan parametrina. Jos ei löydy,
+     * palauttaa null
+     *
+     * @param arvo etsittävän solmun arvo
+     * @return Solmu jonka arvo==etsittävän solmun arvo.  Null, jos solmua ei löydy.
      */
-    public Solmu etsiDijkstraSolmuArvolla(int arvo) {
+    public Solmu etsiSolmuArvolla(int arvo) {
         for (int i = 0; i < getVerkonKoko(); i++) {
             Solmu s = verkko[i];
             if (s.getArvo() == arvo) {
@@ -231,24 +217,9 @@ public class Verkko {
     }
 
     /**
-     * Etsii verkosta, jossa vain AStarissa käytettäviä solmuja, solmua jonka arvo
-     * annetaan parametrina.  Jos ei löydy, palauttaa null
-     * @param arvo
-     * @return
-     */
-    public Solmu etsiASolmuArvolla(int arvo) {
-        for (int i = 0; i < getVerkonKoko(); i++) {
-            Solmu s = verkko2[i];
-            if (s.getArvo() == arvo) {
-                return s;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * palauttaa jonossa solmuja, jotka lisätty Dijkstran ja AStarin suorituksen 
-     * yhteydessä maalausjonoon. 
+     * palauttaa jonossa solmuja, jotka lisätty Dijkstran ja AStarin suorituksen
+     * yhteydessä maalausjonoon.
+     *
      * @return
      */
     public ArrayDeque<Solmu> getProsessi() {
@@ -256,8 +227,10 @@ public class Verkko {
     }
 
     /**
-     * Palauttaa verkon kaaret. Käytetään vain kun halutaan piirtää kaikki kaaret.
-     * @return
+     * Palauttaa verkon kaaret. Käytetään vain kun halutaan piirtää kaikki
+     * kaaret.
+     *
+     * @return lista verkon kaarista
      */
     public List<Kaari> getKaaret() {
         return this.kaaret;
@@ -277,13 +250,13 @@ public class Verkko {
                     Solmu v = u.getVieruslista().get(i).getPaateSolmu();
                     relax(u, v, u.getVieruslista().get(i).getPaino());
                     if (!kaydyt.contains(v.getArvo())) {
-                        Solmu kopio = new ASolmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
+                        Solmu kopio = new Solmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
                         kopio.setColor(Color.YELLOW);
                         prosessi.addLast(kopio);
                     }
                 }
 
-                Solmu kopio = new ASolmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
+                Solmu kopio = new Solmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
                 kopio.setColor(Color.RED);
                 prosessi.addLast(kopio);
                 kaydyt.add(u.getArvo());
@@ -299,10 +272,11 @@ public class Verkko {
         jono = new PriorityQueue<>();
         reitti = new Solmu[getVerkonKoko()];
         for (int i = 0; i < getVerkonKoko(); i++) {
-            verkko2[i].setEtaisyys(10000);
-            verkko2[i].setEtaisyysMaalista(laskeEtaisyys(verkko2[i].getX(), verkko2[i].getY(), etsittava.getX(), etsittava.getY()));
+            verkko[i].setEtaisyysLahdosta(10000);
+            verkko[i].setEtaisyysMaalista(laskeEtaisyys(verkko[i].getX(), verkko[i].getY(), etsittava.getX(), etsittava.getY()));
+            verkko[i].setMuoto(true);
         }
-        verkko2[aloitus.getArvo()].setEtaisyys(0);
+        verkko[aloitus.getArvo()].setEtaisyysLahdosta(0);
     }
 
     private void Dijkstra(int n, Solmu aloitus, Solmu etsittava) {
@@ -322,13 +296,13 @@ public class Verkko {
                     Solmu v = u.getVieruslista().get(i).getPaateSolmu();
                     relax(u, v, u.getVieruslista().get(i).getPaino());
                     if (!kaydyt.contains(v.getArvo())) {
-                        Solmu kopio = new DijkstraSolmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
+                        Solmu kopio = new Solmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
                         kopio.setColor(Color.YELLOW);
                         prosessi.addLast(kopio);
                     }
 
                 }
-                Solmu kopio = new DijkstraSolmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
+                Solmu kopio = new Solmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
                 kopio.setColor(Color.RED);
                 prosessi.addLast(kopio);
                 kaydyt.add(u.getArvo());
@@ -344,16 +318,16 @@ public class Verkko {
 
     /**
      *
-     * @return
+     * @return verkon kaikki solmut arrayssa
      */
     public Solmu[] getSolmut() {
         return this.verkko;
     }
 
     private void relax(Solmu u, Solmu v, double paino) {
-        if (v.getEtaisyys() > u.getEtaisyys() + paino) {
+        if (v.getEtaisyysLahdosta() > u.getEtaisyysLahdosta() + paino) {
 
-            v.setEtaisyys(u.getEtaisyys() + paino);
+            v.setEtaisyysLahdosta(u.getEtaisyysLahdosta() + paino);
             reitti[v.getArvo()] = u;
         }
         jono.add(v);

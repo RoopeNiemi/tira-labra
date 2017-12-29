@@ -32,8 +32,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import reitinhakuohjelma.rakenne.Kaari;
 import reitinhakuohjelma.rakenne.Solmu;
+import reitinhakuohjelma.rakenne.Kaari;
 import reitinhakuohjelma.rakenne.Verkko;
 
 /**
@@ -52,10 +52,8 @@ public class ReitinhakuOhjelma extends Application {
     private boolean valinta = false;
     private ArrayDeque<Solmu> maalausPino = new ArrayDeque<>();
 
-
-
     /**
-     *Tallentaa solmut tekstitiedostoon Solmut.txt. 
+     * Tallentaa solmut tekstitiedostoon Solmut.txt.
      */
     public void tallennaSolmut() {
         List<String> lista = new ArrayList<>();
@@ -77,10 +75,8 @@ public class ReitinhakuOhjelma extends Application {
 
     }
 
-
-
     /**
-     *Lataa solmut tekstitiedostosta Solmut.txt verkon solmuiksi.
+     * Lataa solmut tekstitiedostosta Solmut.txt verkon solmuiksi.
      */
     public void lataaSolmut() {
         try {
@@ -89,7 +85,8 @@ public class ReitinhakuOhjelma extends Application {
                 double x = Double.parseDouble(solmunTiedot[0]);
                 double y = Double.parseDouble(solmunTiedot[1]);
                 String nimi = solmunTiedot[2];
-                int arvo = Integer.parseInt(solmunTiedot[3]);          
+                int arvo = Integer.parseInt(solmunTiedot[3]);
+
                 verkko.lisaaSolmu(x, y, nimi, arvo);
             });
         } catch (IOException ex) {
@@ -97,9 +94,8 @@ public class ReitinhakuOhjelma extends Application {
         }
     }
 
-
     /**
-     *Tallentaa kaaret tekstitiedostoon Kaaret.txt
+     * Tallentaa kaaret tekstitiedostoon Kaaret.txt
      */
     public void tallennaKaaret() {
         List<Kaari> kaaret = verkko.getKaaret();
@@ -121,9 +117,8 @@ public class ReitinhakuOhjelma extends Application {
         }
     }
 
-
     /**
-     *Lataa kaaret tekstitiedostosta Kaaret.txt
+     * Lataa kaaret tekstitiedostosta Kaaret.txt
      */
     public void lataaKaaret() {
         try {
@@ -133,13 +128,8 @@ public class ReitinhakuOhjelma extends Application {
                 int arvo2 = Integer.parseInt(kaarenTiedot[1]);
                 double paino = Double.parseDouble(kaarenTiedot[2]);
                 double kaarenNopeus = Double.parseDouble(kaarenTiedot[3]);
-                Solmu solmun1 = verkko.etsiDijkstraSolmuArvolla(arvo1);
-                Solmu solmun2 = verkko.etsiDijkstraSolmuArvolla(arvo2);
-                solmun1.lisaaViereinenSolmu(solmun2, paino, kaarenNopeus);
-                solmun2.lisaaViereinenSolmu(solmun1, paino, kaarenNopeus);
-
-                solmun1 = verkko.etsiASolmuArvolla(arvo1);
-                solmun2 = verkko.etsiASolmuArvolla(arvo2);
+                Solmu solmun1 = verkko.etsiSolmuArvolla(arvo1);
+                Solmu solmun2 = verkko.etsiSolmuArvolla(arvo2);
                 solmun1.lisaaViereinenSolmu(solmun2, paino, kaarenNopeus);
                 solmun2.lisaaViereinenSolmu(solmun1, paino, kaarenNopeus);
                 verkko.lisaaKaari(new Kaari(solmun1, solmun2, paino, kaarenNopeus));
@@ -165,7 +155,7 @@ public class ReitinhakuOhjelma extends Application {
         Label lahto = new Label("Lähtökaupunki");
         TextField lahtoKaupunki = new TextField();
         lahtoKaupunki.setOnAction(event -> {
-            solmu1 = verkko.etsiDijkstraSolmuNimella(lahtoKaupunki.getText());
+            solmu1 = verkko.etsiSolmuNimella(lahtoKaupunki.getText());
             if (solmu1 != null) {
                 piirraTausta(gc);
                 piirraSolmut(gc);
@@ -177,7 +167,7 @@ public class ReitinhakuOhjelma extends Application {
         TextField kohdeKaupunki = new TextField();
         kohdeKaupunki.setOnAction(event -> {
 
-            solmu2 = verkko.etsiDijkstraSolmuNimella(kohdeKaupunki.getText());
+            solmu2 = verkko.etsiSolmuNimella(kohdeKaupunki.getText());
             if (solmu1 != null && solmu2 != null) {
                 maalausPino = verkko.shortestPath(solmu1, solmu2);
 
@@ -218,8 +208,8 @@ public class ReitinhakuOhjelma extends Application {
                 piirraTausta(gc);
                 piirraSolmut(gc);
                 if (hakutapa.getSelectedToggle() == Dijkstra) {
-                    solmu1 = verkko.etsiDijkstraSolmuNimella(lahtoKaupunki.getText());
-                    solmu2 = verkko.etsiDijkstraSolmuNimella(kohdeKaupunki.getText());
+                    solmu1 = verkko.etsiSolmuNimella(lahtoKaupunki.getText());
+                    solmu2 = verkko.etsiSolmuNimella(kohdeKaupunki.getText());
 
                     if (solmu1 != null && solmu2 != null) {
 
@@ -229,8 +219,8 @@ public class ReitinhakuOhjelma extends Application {
                         valinta = true;
                     }
                 } else {
-                    solmu1 = verkko.EtsiASolmuNimella(lahtoKaupunki.getText());
-                    solmu2 = verkko.EtsiASolmuNimella(kohdeKaupunki.getText());
+                    solmu1 = verkko.etsiSolmuNimella(lahtoKaupunki.getText());
+                    solmu2 = verkko.etsiSolmuNimella(kohdeKaupunki.getText());
                     if (solmu1 != null && solmu2 != null) {
                         maalausPino = verkko.AStarShortestPath(solmu1, solmu2);
                         solmu1 = null;
@@ -289,19 +279,18 @@ public class ReitinhakuOhjelma extends Application {
     }
 
     /**
-     * Piirtää taustakuvaksi kartta.png -kuvan, parametrina GraphicsContext gc
-     * @param gc
+     * Piirtää taustakuvaksi kartta.png -kuvan
+     *
+     * @param gc Canvas piirtoalustan GraphicsContext 
      */
     public void piirraTausta(GraphicsContext gc) {
         gc.drawImage(kartta, 0, 0);
     }
 
-
-
-
     /**
      * Piirtää verkon kaaret kartalle. Ei tällä hetkellä käytössä
-     * @param gc
+     *
+     * @param gc Canvas piirtoalustan GraphicsContext 
      */
     public void piirraKaaret(GraphicsContext gc) {
         gc.setStroke(Color.BLUE);
@@ -325,10 +314,11 @@ public class ReitinhakuOhjelma extends Application {
     }
 
     /**
-     * Piirtää yksittäisen solmun. Käytetään reitinhakualgoritmin käytön jälkeen.
-     * 
-     * @param gc
-     * @param s
+     * Piirtää yksittäisen solmun. Käytetään reitinhakualgoritmin käytön
+     * jälkeen.
+     *
+     * @param gc Canvas piirtoalustan GraphicsContext 
+     * @param s Piirrettävä solmu
      */
     public void piirraSolmu(GraphicsContext gc, Solmu s) {
         gc.setFill(s.getColor());
@@ -336,8 +326,9 @@ public class ReitinhakuOhjelma extends Application {
     }
 
     /**
-     * Piirtää kartalle kaikki solmut valkoisina. 
-     * @param gc
+     * Piirtää kartalle kaikki solmut valkoisina.
+     *
+     * @param gc Canvas piirtoalustan GraphicsContext 
      */
     public void piirraSolmut(GraphicsContext gc) {
         Solmu[] solmut = verkko.getSolmut();

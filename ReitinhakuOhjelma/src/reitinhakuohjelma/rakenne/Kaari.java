@@ -18,10 +18,10 @@ public class Kaari {
      * Kaari solmusta l solmuun p. Kaaren pituus laskettu Verkko-luokan metodilla 
      * laskeEtaisyys. Kaaret luodaan tekstitiedostosta Kaaret.txt ohjelma käynnistettäessä. 
      * Kaikki kaaren parametrit on otettu suoraan tekstitiedostoista. 
-     * @param l
-     * @param p
-     * @param pituus
-     * @param nopeus
+     * @param l Lähtösolmu
+     * @param p Päätesolmu
+     * @param pituus Kaaren pituus
+     * @param nopeus Kaaren nopeus
      */
     public Kaari(Solmu l, Solmu p, double pituus, double nopeus) {
         this.lahtoSolmu = l;
@@ -51,7 +51,7 @@ public class Kaari {
      *
      * @param lahtoSolmu
      */
-    public void setLahtoSolmu(DijkstraSolmu lahtoSolmu) {
+    public void setLahtoSolmu(Solmu lahtoSolmu) {
         this.lahtoSolmu = lahtoSolmu;
     }
 
@@ -67,7 +67,7 @@ public class Kaari {
      *
      * @param paateSolmu
      */
-    public void setPaateSolmu(DijkstraSolmu paateSolmu) {
+    public void setPaateSolmu(Solmu paateSolmu) {
         this.paateSolmu = paateSolmu;
     }
 
