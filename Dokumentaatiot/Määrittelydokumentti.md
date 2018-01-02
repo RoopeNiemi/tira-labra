@@ -1,6 +1,6 @@
 # Määrittelydokumentti
 ### Aihe ja käytetyt tietorakenteet
-Labratyön aiheeksi olen valinnut Dijkstran ja A* algoritmin, näiden toteuttamiseen käytän ainakin lista ja minimikeko tietorakenteita. Ohjelman tavoitteena on käyttää kahta yllämainittua reitinhakualgoritmia ja vertailla niiden toimintaa.  
+Labratyön aiheeksi olen valinnut Dijkstran ja A* algoritmin, näiden toteuttamiseen käytän ainakin lista ja minimikeko tietorakenteita. Ohjelman tavoitteena on käyttää kahta yllämainittua reitinhakualgoritmia ja vertailla niiden toimintaa harvassa verkossa.  
 ### Syötteet ja niiden käyttö
 Tarkoituksena tehdä ohjelma jossa taustalla Suomen kartta joka sisältää tietyn määrän kaupunkeja, joten syötteenä ohjelma saa lähtökaupungin ja kaupungin, johon reitti haetaan. Tämä syöte annetaan joko kirjoittamalla tekstikenttään kartalla olevan kaupungin nimi tai mahdollisesti valitsemalla listasta kaupungit klikkaamalla. 
 
