@@ -5,7 +5,7 @@ Tällä viikolla tein tietorakenteita pino, jono, joukko ja lista. Lisäksi olen
 
 #### Pinosta, listasta ja jonosta
 
-Näiden tietorakenteiden taustalla on taulukko, jonka koko tuplaantuu kun kyseinen tietorakenne on täynnä. Poistotilanteessa kokoa ei puoliteta vaikka tietorakenteessa olisi vain alle puolet taulukon määrästä, sillä joko tietorakenteista ei poisteta ollenkaan kuten listan tapauksessa asia on, tai niistä poistetaan kaikki solmut peräkkäin, jolloin jatkuva tietorakenteen pienennys vain lisäisi käytettävää aikaa turhaan. Lisäksi pino, jono ja lista ovat geneerisiä tietorakenteita.  
+Näiden tietorakenteiden taustalla on taulukko, jonka koko tuplaantuu kun kyseinen tietorakenne on täynnä. Poistotilanteessa kokoa ei puoliteta vaikka tietorakenteessa olisi vain alle puolet taulukon määrästä, sillä joko tietorakenteista ei poisteta ollenkaan kuten listan tapauksessa asia on, tai niistä poistetaan kaikki solmut peräkkäin, jolloin jatkuva tietorakenteen pienennys vain lisäisi käytettävää aikaa turhaan. Lisäksi pino, jono ja lista ovat geneerisiä.  
 
 #### Joukosta
 
