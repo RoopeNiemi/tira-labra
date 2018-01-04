@@ -16,7 +16,7 @@ public class Solmu implements Comparable<Solmu> {
 
     private int arvo;
     private double etaisyysLahdosta, etaisyysMaalista;
-    private ArrayList<Kaari> vieruslista;
+    private Lista<Kaari> vieruslista;
     private double x, y;
     private String nimi = "";
     private Color color = Color.WHITE;
@@ -31,7 +31,7 @@ public class Solmu implements Comparable<Solmu> {
      */
     public Solmu(int arvo, double x, double y, String nimi) {
         this.etaisyysLahdosta = Long.MAX_VALUE;
-        this.vieruslista = new ArrayList<>();
+        this.vieruslista = new Lista<>();
         this.x = x;
         this.y = y;
         this.nimi = nimi;
@@ -116,7 +116,7 @@ public class Solmu implements Comparable<Solmu> {
     }
 
 
-    public ArrayList<Kaari> getVieruslista() {
+    public Lista<Kaari> getVieruslista() {
         return vieruslista;
     }
 
@@ -127,7 +127,7 @@ public class Solmu implements Comparable<Solmu> {
      * @param kaarenNopeus kaaren nopeus
      */
     public void lisaaViereinenSolmu(Solmu s, double pituus, double kaarenNopeus) {
-        vieruslista.add(new Kaari(this, s, pituus, kaarenNopeus));
+        vieruslista.lisaa(new Kaari(this, s, pituus, kaarenNopeus));
     }
 
     /**

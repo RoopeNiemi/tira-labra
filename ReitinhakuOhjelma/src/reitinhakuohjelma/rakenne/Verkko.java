@@ -22,11 +22,12 @@ public class Verkko {
     private Solmu[] verkko = new Solmu[2000];
     private int viimeisinSolmu = 0;
     private PriorityQueue<Solmu> jono;
-    private HashSet<Integer> kaydyt;
-    private List<Kaari> kaaret = new ArrayList<>();
+    private Joukko kaydyt;
+    private Lista<Kaari> kaaret = new Lista<>();
     private Solmu[] reitti = new Solmu[2000];
-    private Stack<Solmu> rt = new Stack<>();
-    private ArrayDeque<Solmu> prosessi = new ArrayDeque<>();
+    private Pino<Solmu> rt = new Pino<>();
+    private Jono<Solmu> prosessi = new Jono<>();
+    private double reitinPituus = 0;
 
     /**
      *
@@ -42,15 +43,19 @@ public class Verkko {
      * @param k lisättävä kaari
      */
     public void lisaaKaari(Kaari k) {
-        kaaret.add(k);
+        kaaret.lisaa(k);
     }
 
     /**
      * Resetoi lyhimmän reitin pinon sekä maalausjonon.
      */
     public void resetoiMaalausjono() {
-        this.rt.clear();
-        this.prosessi.clear();
+        this.rt.tyhjenna();
+        this.prosessi.tyhjennaJono();
+    }
+
+    public double getReitinpituus() {
+        return this.reitinPituus;
     }
 
     /**
@@ -83,8 +88,9 @@ public class Verkko {
      * @param b solmu johon haetaan lyhin reitti
      * @return hakuprosessin aikana syntynyt maalausjono
      */
-    public ArrayDeque<Solmu> shortestPath(Solmu a, Solmu b) {
-        rt = new Stack<>();
+    public Jono<Solmu> shortestPath(Solmu a, Solmu b) {
+        long now = System.currentTimeMillis();
+        rt = new Pino<>();
         Dijkstra(viimeisinSolmu - 1, a, b);
         Solmu r = b;
         while (true) {
@@ -95,10 +101,15 @@ public class Verkko {
             r = reitti[r.getArvo()];
         }
 
-        while (!rt.isEmpty()) {
+   
+        long end = System.currentTimeMillis();
+        System.out.println("Dijkstra: " + (end - now) + "ms");
+        System.out.println("Dijkstra läpikäytyjä solmuja: " + this.kaydyt.koko());
+
+        while (!rt.onTyhja()) {
             Solmu ss = rt.pop();
-            ss.setColor(Color.BLACK);
-            prosessi.addLast(ss);
+            ss.setColor(Color.BLUE);
+            prosessi.lisaaJonoon(ss);
         }
         return prosessi;
 
@@ -122,8 +133,9 @@ public class Verkko {
      * @param b solmu johon haetaan lyhin reitti
      * @return hakuprosessin aikana syntynyt maalausjono
      */
-    public ArrayDeque<Solmu> AStarShortestPath(Solmu a, Solmu b) {
-        rt = new Stack<>();
+    public Jono<Solmu> AStarShortestPath(Solmu a, Solmu b) {
+        long now = System.currentTimeMillis();
+        rt = new Pino<>();
         AStar(a, b);
         Solmu r = b;
         while (true) {
@@ -134,10 +146,14 @@ public class Verkko {
             r = reitti[r.getArvo()];
         }
 
-        while (!rt.isEmpty()) {
+  
+        long end = System.currentTimeMillis();
+        System.out.println("AStar: " + (end - now) + "ms");
+        System.out.println("AStar läpikäytyjä solmuja: " + this.kaydyt.koko());
+        while (!rt.onTyhja()) {
             Solmu ss = rt.pop();
-            ss.setColor(Color.BLACK);
-            prosessi.addLast(ss);
+            ss.setColor(Color.BLUE);
+            prosessi.lisaaJonoon(ss);
         }
         return prosessi;
 
@@ -147,11 +163,11 @@ public class Verkko {
      * Etsii solmua sen nimellä verkosta. Jos parametrin nimistä solmua ei ole
      * palautetaan null.
      *
-     * @param nimi - Etsittävän solmun nimi. 
+     * @param nimi - Etsittävän solmun nimi.
      * @return
      */
     public Solmu etsiSolmuNimella(String nimi) {
-        if(nimi.equalsIgnoreCase("null")){
+        if (nimi.equalsIgnoreCase("null")) {
             return null;
         }
         for (int i = 0; i < getVerkonKoko(); i++) {
@@ -207,7 +223,8 @@ public class Verkko {
      * palauttaa null
      *
      * @param arvo etsittävän solmun arvo
-     * @return Solmu jonka arvo==etsittävän solmun arvo.  Null, jos solmua ei löydy.
+     * @return Solmu jonka arvo==etsittävän solmun arvo. Null, jos solmua ei
+     * löydy.
      */
     public Solmu etsiSolmuArvolla(int arvo) {
         for (int i = 0; i < getVerkonKoko(); i++) {
@@ -225,7 +242,7 @@ public class Verkko {
      *
      * @return
      */
-    public ArrayDeque<Solmu> getProsessi() {
+    public Jono<Solmu> getProsessi() {
         return this.prosessi;
     }
 
@@ -235,7 +252,7 @@ public class Verkko {
      *
      * @return lista verkon kaarista
      */
-    public List<Kaari> getKaaret() {
+    public Lista<Kaari> getKaaret() {
         return this.kaaret;
     }
 
@@ -248,21 +265,21 @@ public class Verkko {
                 break;
             }
             Solmu u = jono.poll();
-            if (!kaydyt.contains(u.getArvo())) {
-                for (int i = 0; i < u.getVieruslista().size(); i++) {
+            if (!kaydyt.sisaltaa(u.getArvo())) {
+                for (int i = 0; i < u.getVieruslista().koko(); i++) {
                     Solmu v = u.getVieruslista().get(i).getPaateSolmu();
                     relax(u, v, u.getVieruslista().get(i).getPaino());
-                    if (!kaydyt.contains(v.getArvo())) {
+                    if (!kaydyt.sisaltaa(v.getArvo())) {
                         Solmu kopio = new Solmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
                         kopio.setColor(Color.YELLOW);
-                        prosessi.addLast(kopio);
+                        prosessi.lisaaJonoon(kopio);
                     }
                 }
 
                 Solmu kopio = new Solmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
                 kopio.setColor(Color.RED);
-                prosessi.addLast(kopio);
-                kaydyt.add(u.getArvo());
+                prosessi.lisaaJonoon(kopio);
+                kaydyt.lisaa(u.getArvo());
                 if (u.getArvo() == etsittava.getArvo()) {
                     break;
                 }
@@ -271,7 +288,7 @@ public class Verkko {
     }
 
     private void alustaAStar(Solmu aloitus, Solmu etsittava) {
-        kaydyt = new HashSet<>();
+        kaydyt = new Joukko();
         jono = new PriorityQueue<>();
         reitti = new Solmu[getVerkonKoko()];
         for (int i = 0; i < getVerkonKoko(); i++) {
@@ -283,7 +300,7 @@ public class Verkko {
     }
 
     private void Dijkstra(int n, Solmu aloitus, Solmu etsittava) {
-        kaydyt = new HashSet<>();
+        kaydyt = new Joukko();
         alustaDijkstra(aloitus);
 
         jono.add(aloitus);
@@ -293,22 +310,22 @@ public class Verkko {
             }
             Solmu u = jono.poll();
 
-            if (!kaydyt.contains(u.getArvo())) {
+            if (!kaydyt.sisaltaa(u.getArvo())) {
 
-                for (int i = 0; i < u.getVieruslista().size(); i++) {
+                for (int i = 0; i < u.getVieruslista().koko(); i++) {
                     Solmu v = u.getVieruslista().get(i).getPaateSolmu();
                     relax(u, v, u.getVieruslista().get(i).getPaino());
-                    if (!kaydyt.contains(v.getArvo())) {
+                    if (!kaydyt.sisaltaa(v.getArvo())) {
                         Solmu kopio = new Solmu(v.getArvo(), v.getX(), v.getY(), v.getNimi());
                         kopio.setColor(Color.YELLOW);
-                        prosessi.addLast(kopio);
+                        prosessi.lisaaJonoon(kopio);
                     }
 
                 }
                 Solmu kopio = new Solmu(u.getArvo(), u.getX(), u.getY(), u.getNimi());
                 kopio.setColor(Color.RED);
-                prosessi.addLast(kopio);
-                kaydyt.add(u.getArvo());
+                prosessi.lisaaJonoon(kopio);
+                kaydyt.lisaa(u.getArvo());
                 if (u.getArvo() == etsittava.getArvo()) {
                     break;
                 }
@@ -324,7 +341,7 @@ public class Verkko {
      * @return verkon kaikki solmut arrayssa
      */
     public Solmu[] getSolmut() {
-        return this.verkko;
+        return this.verkko;   
     }
 
     private void relax(Solmu u, Solmu v, double paino) {

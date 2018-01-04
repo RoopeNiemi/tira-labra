@@ -32,8 +32,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import reitinhakuohjelma.rakenne.Jono;
 import reitinhakuohjelma.rakenne.Solmu;
 import reitinhakuohjelma.rakenne.Kaari;
+import reitinhakuohjelma.rakenne.Lista;
 import reitinhakuohjelma.rakenne.Verkko;
 
 /**
@@ -48,9 +50,13 @@ public class ReitinhakuOhjelma extends Application {
     private final String tallennetutKaaret = "Kaaret.txt";
     private Solmu solmu1 = null;
     private Solmu solmu2 = null;
+    private Button reset, hae;
+    private RadioButton Dijkstra, AStar;
+    private ToggleGroup hakutapa;
+    private TextField lahtokaupunki, kohdekaupunki;
     private double nopeus = 80;
     private boolean valinta = false;
-    private ArrayDeque<Solmu> maalausPino = new ArrayDeque<>();
+    private Jono<Solmu> maalausPino = new Jono<>();
 
     /**
      * Tallentaa solmut tekstitiedostoon Solmut.txt.
@@ -98,9 +104,9 @@ public class ReitinhakuOhjelma extends Application {
      * Tallentaa kaaret tekstitiedostoon Kaaret.txt
      */
     public void tallennaKaaret() {
-        List<Kaari> kaaret = verkko.getKaaret();
+        Lista<Kaari> kaaret = verkko.getKaaret();
         List<String> kaaretTeksti = new ArrayList<>();
-        for (int i = 0; i < kaaret.size(); i++) {
+        for (int i = 0; i < kaaret.koko(); i++) {
             int arvo1 = kaaret.get(i).getLahtoSolmu().getArvo();
             int arvo2 = kaaret.get(i).getPaateSolmu().getArvo();
             double paino = kaaret.get(i).getPaino();
@@ -149,99 +155,9 @@ public class ReitinhakuOhjelma extends Application {
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(tausta);
         piirraTausta(gc);
-        piirraSolmut(gc);
+        //  piirraSolmut(gc);
 
-        VBox leftBox = new VBox();
-        Label lahto = new Label("Lähtökaupunki");
-        TextField lahtoKaupunki = new TextField();
-        lahtoKaupunki.setOnAction(event -> {
-            solmu1 = verkko.etsiSolmuNimella(lahtoKaupunki.getText());
-            if (solmu1 != null) {
-                piirraTausta(gc);
-                piirraSolmut(gc);
-
-            }
-        });
-
-        Label maali = new Label("Kohdekaupunki");
-        TextField kohdeKaupunki = new TextField();
-        kohdeKaupunki.setOnAction(event -> {
-
-            solmu2 = verkko.etsiSolmuNimella(kohdeKaupunki.getText());
-            if (solmu1 != null && solmu2 != null) {
-                maalausPino = verkko.shortestPath(solmu1, solmu2);
-
-                solmu1 = null;
-                solmu2 = null;
-                valinta = true;
-            }
-
-        });
-
-        HBox radioNapitBox = new HBox();
-        radioNapitBox.setAlignment(Pos.CENTER);
-        ToggleGroup hakutapa = new ToggleGroup();
-        RadioButton AStar = new RadioButton("AStar");
-        AStar.setToggleGroup(hakutapa);
-        RadioButton Dijkstra = new RadioButton("Dijkstra");
-        Dijkstra.setToggleGroup(hakutapa);
-        hakutapa.selectToggle(Dijkstra);
-        radioNapitBox.getChildren().add(Dijkstra);
-        radioNapitBox.getChildren().add(AStar);
-        HBox napit = new HBox();
-        napit.setAlignment(Pos.CENTER);
-        napit.setSpacing(30);
-
-        Button reset = new Button("Reset");
-        reset.setOnAction(event -> {
-            solmu1 = null;
-            solmu2 = null;
-            piirraTausta(gc);
-            piirraSolmut(gc);
-            valinta = false;
-            verkko.resetoiMaalausjono();
-        });
-
-        Button hae = new Button("Hae");
-        hae.setOnAction(event -> {
-            if (!lahtoKaupunki.getText().isEmpty() && !kohdeKaupunki.getText().isEmpty()) {
-                piirraTausta(gc);
-                piirraSolmut(gc);
-                if (hakutapa.getSelectedToggle() == Dijkstra) {
-                    solmu1 = verkko.etsiSolmuNimella(lahtoKaupunki.getText());
-                    solmu2 = verkko.etsiSolmuNimella(kohdeKaupunki.getText());
-
-                    if (solmu1 != null && solmu2 != null) {
-
-                        maalausPino = verkko.shortestPath(solmu1, solmu2);
-                        solmu1 = null;
-                        solmu2 = null;
-                        valinta = true;
-                    }
-                } else {
-                    solmu1 = verkko.etsiSolmuNimella(lahtoKaupunki.getText());
-                    solmu2 = verkko.etsiSolmuNimella(kohdeKaupunki.getText());
-                    if (solmu1 != null && solmu2 != null) {
-                        maalausPino = verkko.AStarShortestPath(solmu1, solmu2);
-                        solmu1 = null;
-                        solmu2 = null;
-                        valinta = true;
-                    }
-                }
-            }
-
-        });
-
-        leftBox.setAlignment(Pos.CENTER);
-        leftBox.getChildren().add(lahto);
-        leftBox.getChildren().add(lahtoKaupunki);
-        leftBox.getChildren().add(maali);
-        leftBox.getChildren().add(kohdeKaupunki);
-        leftBox.getChildren().add(radioNapitBox);
-        napit.getChildren().add(reset);
-        napit.getChildren().add(hae);
-        leftBox.getChildren().add(napit);
-        borderPane.setLeft(leftBox);
+        luoVasenValikko(borderPane, gc);
 
         new AnimationTimer() {
             long prev = 0;
@@ -253,8 +169,8 @@ public class ReitinhakuOhjelma extends Application {
                 }
                 prev = now;
                 if (valinta) {
-                    if (!maalausPino.isEmpty()) {
-                        Solmu s = maalausPino.pollFirst();
+                    if (!maalausPino.onTyhja()) {
+                        Solmu s = maalausPino.poistaJonosta();
                         piirraSolmu(gc, s);
                     } else {
                         valinta = false;
@@ -270,6 +186,112 @@ public class ReitinhakuOhjelma extends Application {
         primaryStage.show();
     }
 
+    private void luoVasenValikko(BorderPane ikkuna, GraphicsContext gc) {
+        VBox leftBox = new VBox();
+        leftBox.setAlignment(Pos.CENTER);
+        luoTekstikentat(leftBox, gc);
+        luoRadioNapit(leftBox, gc);
+        luoNapit(leftBox, gc);
+        ikkuna.setLeft(leftBox);
+
+    }
+
+    private void luoTekstikentat(VBox valikko, GraphicsContext gc) {
+        Label lahto = new Label("Lähtökaupunki");
+        lahtokaupunki = new TextField();
+        lahtokaupunki.setOnAction(event -> {
+            solmu1 = verkko.etsiSolmuNimella(lahtokaupunki.getText());
+            if (solmu1 != null) {
+                piirraTausta(gc);
+                piirraSolmut(gc);
+
+            }
+        });
+
+        Label maali = new Label("Kohdekaupunki");
+        this.kohdekaupunki = new TextField();
+        this.kohdekaupunki.setOnAction(event -> {
+
+            solmu2 = verkko.etsiSolmuNimella(kohdekaupunki.getText());
+            if (solmu1 != null && solmu2 != null) {
+                maalausPino = verkko.shortestPath(solmu1, solmu2);
+
+                solmu1 = null;
+                solmu2 = null;
+                valinta = true;
+            }
+
+        });
+        valikko.getChildren().add(lahto);
+        valikko.getChildren().add(lahtokaupunki);
+        valikko.getChildren().add(maali);
+        valikko.getChildren().add(kohdekaupunki);
+    }
+
+    private void luoRadioNapit(VBox valikko, GraphicsContext gc) {
+        HBox radioNapitBox = new HBox();
+        radioNapitBox.setAlignment(Pos.CENTER);
+        hakutapa = new ToggleGroup();
+        AStar = new RadioButton("AStar");
+        AStar.setToggleGroup(hakutapa);
+        Dijkstra = new RadioButton("Dijkstra");
+        Dijkstra.setToggleGroup(hakutapa);
+        hakutapa.selectToggle(Dijkstra);
+        radioNapitBox.getChildren().add(Dijkstra);
+        radioNapitBox.getChildren().add(AStar);
+        valikko.getChildren().add(radioNapitBox);
+    }
+
+    private void luoNapit(VBox valikko, GraphicsContext gc) {
+        HBox napit = new HBox();
+        napit.setAlignment(Pos.CENTER);
+        napit.setSpacing(30);
+
+        reset = new Button("Reset");
+        reset.setOnAction(event -> {
+            solmu1 = null;
+            solmu2 = null;
+            piirraTausta(gc);
+            //  piirraSolmut(gc);
+            valinta = false;
+            verkko.resetoiMaalausjono();
+        });
+
+        hae = new Button("Hae");
+        hae.setOnAction(event -> {
+            if (!lahtokaupunki.getText().isEmpty() && !kohdekaupunki.getText().isEmpty()) {
+                piirraTausta(gc);
+                //    piirraSolmut(gc);
+                if (hakutapa.getSelectedToggle() == Dijkstra) {
+                    solmu1 = verkko.etsiSolmuNimella(lahtokaupunki.getText());
+                    solmu2 = verkko.etsiSolmuNimella(kohdekaupunki.getText());
+
+                    if (solmu1 != null && solmu2 != null) {
+
+                        maalausPino = verkko.shortestPath(solmu1, solmu2);
+                        solmu1 = null;
+                        solmu2 = null;
+                        valinta = true;
+                    }
+                } else {
+                    solmu1 = verkko.etsiSolmuNimella(lahtokaupunki.getText());
+                    solmu2 = verkko.etsiSolmuNimella(kohdekaupunki.getText());
+                    if (solmu1 != null && solmu2 != null) {
+                        maalausPino = verkko.AStarShortestPath(solmu1, solmu2);
+                        solmu1 = null;
+                        solmu2 = null;
+                        valinta = true;
+                    }
+                }
+            }
+
+        });
+
+        napit.getChildren().add(reset);
+        napit.getChildren().add(hae);
+        valikko.getChildren().add(napit);
+    }
+
     /**
      *
      * @param args
@@ -281,21 +303,21 @@ public class ReitinhakuOhjelma extends Application {
     /**
      * Piirtää taustakuvaksi kartta.png -kuvan
      *
-     * @param gc Canvas piirtoalustan GraphicsContext 
+     * @param gc Canvas piirtoalustan GraphicsContext
      */
-    public void piirraTausta(GraphicsContext gc) {
+    private void piirraTausta(GraphicsContext gc) {
         gc.drawImage(kartta, 0, 0);
     }
 
     /**
      * Piirtää verkon kaaret kartalle. Ei tällä hetkellä käytössä
      *
-     * @param gc Canvas piirtoalustan GraphicsContext 
+     * @param gc Canvas piirtoalustan GraphicsContext
      */
-    public void piirraKaaret(GraphicsContext gc) {
+    private void piirraKaaret(GraphicsContext gc) {
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(1);
-        for (int i = 0; i < verkko.getKaaret().size(); i++) {
+        for (int i = 0; i < verkko.getKaaret().koko(); i++) {
             double x1 = verkko.getKaaret().get(i).getLahtoSolmu().getX();
             double y1 = verkko.getKaaret().get(i).getLahtoSolmu().getY();
             double x2 = verkko.getKaaret().get(i).getPaateSolmu().getX();
@@ -317,10 +339,11 @@ public class ReitinhakuOhjelma extends Application {
      * Piirtää yksittäisen solmun. Käytetään reitinhakualgoritmin käytön
      * jälkeen.
      *
-     * @param gc Canvas piirtoalustan GraphicsContext 
+     * @param gc Canvas piirtoalustan GraphicsContext
      * @param s Piirrettävä solmu
      */
     public void piirraSolmu(GraphicsContext gc, Solmu s) {
+
         gc.setFill(s.getColor());
         gc.fillOval(s.getX() - 3, s.getY() - 3, 6, 6);
     }
@@ -328,7 +351,7 @@ public class ReitinhakuOhjelma extends Application {
     /**
      * Piirtää kartalle kaikki solmut valkoisina.
      *
-     * @param gc Canvas piirtoalustan GraphicsContext 
+     * @param gc Canvas piirtoalustan GraphicsContext
      */
     public void piirraSolmut(GraphicsContext gc) {
         Solmu[] solmut = verkko.getSolmut();
