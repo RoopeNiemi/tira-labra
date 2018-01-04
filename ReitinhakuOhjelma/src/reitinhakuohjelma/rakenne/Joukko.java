@@ -26,8 +26,8 @@ public class Joukko {
     }
 
     public void lisaa(int lisattava) {
-        if (joukko[Integer.hashCode(lisattava)] == -5) {
-            joukko[Integer.hashCode(lisattava)] = lisattava;
+        if (joukko[lisattava] == -5) {
+            joukko[lisattava] = lisattava;
             koko++;
         }
     }
@@ -37,15 +37,15 @@ public class Joukko {
     }
 
     public void poista(int poistettava) {
-        if (Integer.hashCode(poistettava) < joukko.length) {
-            if (joukko[Integer.hashCode(poistettava)] != -5) {
-                joukko[Integer.hashCode(poistettava)] = -5;
+        if (poistettava < joukko.length) {
+            if (joukko[poistettava] != -5) {
+                joukko[poistettava] = -5;
                 koko--;
             }
         }
     }
 
     public boolean sisaltaa(int luku) {
-        return joukko[Integer.hashCode(luku)] != -5;
+        return joukko[luku] != -5;
     }
 }
