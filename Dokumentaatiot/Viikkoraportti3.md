@@ -1,7 +1,7 @@
 
 # Viikkoraportti 3
 
-Tällä viikolla tein tietorakenteita pino, jono, joukko ja lista. Lisäksi olen pilkkonut start-metodia hieman osiin, jotta ei olisi niin järjettömän kokoinen. Tällä viikolla aikaa meni noin 10h. Testejä en ollut aikaisemmin tehnyt, joten niiden luominen oli mielenkiintoista. Seuraavaksi tarkoitus tehdä minimikeko. 
+Tällä viikolla tein tietorakenteita pino, jono, joukko ja lista. Lisäksi olen pilkkonut start-metodia hieman osiin, jotta ei olisi niin järjettömän kokoinen. Huomasin deadlinen jälkeen että kaarien painon laskeminen tapahtuu väärällä tavalla, on korjattu jo seuraavaa deadlinea varten. Tällä viikolla aikaa meni noin 10h. Testejä en ollut aikaisemmin tehnyt, joten niiden luominen oli mielenkiintoista. Seuraavaksi tarkoitus tehdä minimikeko. 
 
 #### Pinosta, listasta ja jonosta
 
