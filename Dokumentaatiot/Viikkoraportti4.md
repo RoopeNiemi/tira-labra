@@ -1,6 +1,6 @@
 
 # Viikkoraportti 4
-Tällä viikolla tein prioriteettijonoluokan sekä vaihdoin projektin Maven projektiksi. Lisäksi tehnyt pieniä korjailuja, mm. kaaren painot oli laskettu väärin aikaisemmin. Lisäksi siirsin reitinhakualgoritmit pois Verkko-luokasta, ja hioin MainApp-luokkaa. Aikaa tällä viikolla mennyt noin 18h.
+Tällä viikolla tein prioriteettijonoluokan sekä vaihdoin projektin Maven projektiksi. Lisäksi tehnyt pieniä korjailuja, mm. kaaren painot oli laskettu väärin aikaisemmin. Lisäksi siirsin reitinhakualgoritmit pois Verkko-luokasta, ja hioin MainApp-luokkaa. Aikaa tällä viikolla mennyt noin 17h. Seuraavaksi tarkoitus kirjoittaa toteutus-ja testausdokumentaatiota sekä parantaa testien kattavuutta.
 
 #### Kaarista
 Kaaren painot lasketaan nyt oikein, ottaa huomioon tieosuuden nopeuden sekä pituuden oikealla tavalla. 
