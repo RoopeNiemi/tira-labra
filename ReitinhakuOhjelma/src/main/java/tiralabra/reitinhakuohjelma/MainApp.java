@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package reitinhakuohjelma;
+package tiralabra.reitinhakuohjelma;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -15,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -29,176 +26,163 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import reitinhakuohjelma.rakenne.Jono;
-import verkko.Solmu;
-import verkko.Kaari;
-import reitinhakuohjelma.rakenne.Lista;
-import verkko.Verkko;
+import tiralabra.reitinhakuohjelma.rakenne.Jono;
+import tiralabra.reitinhakuohjelma.rakenne.Lista;
+import tiralabra.reitinhakuohjelma.verkko.Kaari;
+import tiralabra.reitinhakuohjelma.verkko.Solmu;
+import tiralabra.reitinhakuohjelma.verkko.Verkko;
 
-/**
- *
- * @author User
- */
-public class ReitinhakuOhjelma extends Application {
+public class MainApp extends Application {
 
-    private final Image kartta = new Image(getClass().getResourceAsStream("kartta.png"));
+    private final Image kartta = new Image(getClass().getResourceAsStream("/kartta.png"));
     private Verkko verkko = new Verkko();
-    private final String tallennetutSolmut = "Solmut.txt";
-    private final String tallennetutKaaret = "Kaaret.txt";
-    private final String tallennetutDijkstraHaut = "DijkstraKaydyt.txt";
-    private final String tallennetutAStarHaut = "AStarKaydyt.txt";
     private Solmu solmu1 = null;
     private Solmu solmu2 = null;
-    private Button reset, hae;
     private RadioButton Dijkstra, AStar;
     private ToggleGroup hakutapa;
-    private TextField lahtokaupunki, kohdekaupunki;
-    private double nopeus = 80;
+    private TextField lahtokaupungit, kohdekaupungit;
     private boolean valinta = false;
     private Jono<Solmu> maalausPino = new Jono<>();
-    private Lista<String> kaupunki = new Lista<>();
+    private Lista<String> kaupungit = new Lista<>();
     private Lista<String> DijkstraHakutulokset = new Lista<>();
     private Lista<String> AStarHakutulokset = new Lista<>();
+    private Lista<String> DijkstraHakuajat = new Lista<>();
+    private Lista<String> AStarHakuajat = new Lista<>();
     private int tilastokerroin = 0;
     private VBox kartanvalikko = new VBox();
     private VBox tilastonvalikko = new VBox();
 
     /**
-     * Tallentaa solmut tekstitiedostoon Solmut.txt.
-     */
-    public void tallennaSolmut() {
-        List<String> lista = new ArrayList<>();
-        Solmu[] solmut = verkko.getSolmut();
-        for (int i = 0; i < verkko.getVerkonKoko(); i++) {
-            double x = solmut[i].getX();
-            double y = solmut[i].getY();
-            String nimi = solmut[i].getNimi();
-            int arvo = solmut[i].getArvo();
-            String s = x + "," + y + "," + nimi + "," + arvo;
-            lista.add(s);
-        }
-
-        try {
-            Files.write(Paths.get(tallennetutSolmut), lista, Charset.forName("UTF-8"));
-        } catch (IOException ex) {
-            Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    /**
      * Lataa solmut tekstitiedostosta Solmut.txt verkon solmuiksi.
+     *
+     * @param v verkko johon solmut ladataan
      */
-    public void lataaSolmut() {
+    public void lataaSolmut(Verkko v) {
         try {
-            Files.lines(Paths.get(tallennetutSolmut)).forEach(s -> {
+            Files.lines(Paths.get("src/main/resources/Solmut.txt")).forEach(s -> {
                 String[] solmunTiedot = s.split(",");
                 double x = Double.parseDouble(solmunTiedot[0]);
                 double y = Double.parseDouble(solmunTiedot[1]);
                 String nimi = solmunTiedot[2];
                 int arvo = Integer.parseInt(solmunTiedot[3]);
                 if (!nimi.equals("NULL")) {
-                    kaupunki.lisaa(nimi);
+                    kaupungit.lisaa(nimi);
                 }
-                verkko.lisaaSolmu(x, y, nimi, arvo);
+                v.lisaaSolmu(x, y, nimi, arvo);
             });
         } catch (IOException ex) {
-            Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Tallentaa kaaret tekstitiedostoon Kaaret.txt
-     */
-    public void tallennaKaaret() {
-        Lista<Kaari> kaaret = verkko.getKaaret();
-        List<String> kaaretTeksti = new ArrayList<>();
-        for (int i = 0; i < kaaret.koko(); i++) {
-            int arvo1 = kaaret.get(i).getLahtoSolmu().getArvo();
-            int arvo2 = kaaret.get(i).getPaateSolmu().getArvo();
-            double paino = kaaret.get(i).getPaino();
-            double kaarenNopeus = kaaret.get(i).getNopeus();
-            String kaari = arvo1 + "," + arvo2 + "," + paino + "," + kaarenNopeus;
-            kaaretTeksti.add(kaari);
-
-        }
-
-        try {
-            Files.write(Paths.get(tallennetutKaaret), kaaretTeksti, Charset.forName("UTF-8"));
-        } catch (IOException ex) {
-            Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     /**
      * Lataa kaaret tekstitiedostosta Kaaret.txt
+     *
+     * @param v verkko johon kaaret ladataan
      */
-    public void lataaKaaret() {
+    public void lataaKaaret(Verkko v) {
         try {
-            Files.lines(Paths.get(tallennetutKaaret)).forEach(k -> {
+            Files.lines(Paths.get("src/main/resources/Kaaret.txt")).forEach(k -> {
                 String[] kaarenTiedot = k.split(",");
                 int arvo1 = Integer.parseInt(kaarenTiedot[0]);
                 int arvo2 = Integer.parseInt(kaarenTiedot[1]);
                 double paino = Double.parseDouble(kaarenTiedot[2]);
                 double kaarenNopeus = Double.parseDouble(kaarenTiedot[3]);
-                Solmu solmun1 = verkko.etsiSolmuArvolla(arvo1);
-                Solmu solmun2 = verkko.etsiSolmuArvolla(arvo2);
+                Solmu solmun1 = v.etsiSolmuArvolla(arvo1);
+                Solmu solmun2 = v.etsiSolmuArvolla(arvo2);
                 solmun1.lisaaViereinenSolmu(solmun2, paino, kaarenNopeus);
                 solmun2.lisaaViereinenSolmu(solmun1, paino, kaarenNopeus);
-                verkko.lisaaKaari(new Kaari(solmun1, solmun2, paino, kaarenNopeus));
+                v.lisaaKaari(new Kaari(solmun1, solmun2, paino, kaarenNopeus));
             });
         } catch (IOException ex) {
-            Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void lataaHaut() {
         try {
-            Files.lines(Paths.get(tallennetutDijkstraHaut)).forEach(k -> {
+            Files.lines(Paths.get("src/main/resources/DijkstraKaydyt.txt")).forEach(k -> {
                 String[] rivi = k.split(",");
                 DijkstraHakutulokset.lisaa(rivi[0]);
             });
         } catch (IOException ex) {
-            Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         try {
-            Files.lines(Paths.get(tallennetutAStarHaut)).forEach(k -> {
+            Files.lines(Paths.get("src/main/resources/AStarKaydyt.txt")).forEach(k -> {
                 String[] rivi = k.split(",");
                 AStarHakutulokset.lisaa(rivi[0]);
             });
         } catch (IOException ex) {
-            Logger.getLogger(ReitinhakuOhjelma.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
+    public Lista<String> haeKaupungit() {
+        return this.kaupungit;
+    }
+
+    public void tallenna(List<String> lista, String o) {
+        try {
+            Files.write(Paths.get(o), lista, Charset.forName("UTF-8"));
+        } catch (IOException ex) {
+            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void haeKaikki() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < kaupungit.koko(); i++) {
+            for (int j = 0; j < kaupungit.koko(); j++) {
+                Solmu a = verkko.etsiSolmuNimella(kaupungit.get(i));
+                Solmu b = verkko.etsiSolmuNimella(kaupungit.get(j));
+                verkko.shortestPath(a, b);
+                list.add(verkko.getKaydyt().koko() + "," + a.getNimi() + "-" + b.getNimi());
+            }
+        }
+        tallenna(list, "src/main/resources/DijkstraKaydyt.txt");
+      list = new ArrayList<>();
+        for (int i = 0; i < kaupungit.koko(); i++) {
+            for (int j = 0; j < kaupungit.koko(); j++) {
+                Solmu a = verkko.etsiSolmuNimella(kaupungit.get(i));
+                Solmu b = verkko.etsiSolmuNimella(kaupungit.get(j));
+                verkko.AStarShortestPath(a, b);
+                list.add(verkko.getKaydyt().koko() + "," + a.getNimi() + "-" + b.getNimi());
+            }
+        }
+        tallenna(list, "src/main/resources/AStarKaydyt.txt");
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        lataaSolmut();
-        lataaKaaret();
+        lataaSolmut(verkko);
+        lataaKaaret(verkko);
         lataaHaut();
+
+        hakujenKeskiarvo();
 
         Canvas tausta = new Canvas(600, 800);
         GraphicsContext gc = tausta.getGraphicsContext2D();
         Canvas tilasto = new Canvas(600, 800);
-        GraphicsContext tilastoGc = tilasto.getGraphicsContext2D();
-
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(tausta);
         piirraTausta(gc);
-        //  piirraSolmut(gc);
 
         luoKartanValikko(borderPane, gc, tilasto);
         Scene scene = new Scene(borderPane, 800, 900);
+
         luoTilastovalikko(tausta, tilasto, borderPane);
 
         new AnimationTimer() {
             long prev = 0;
 
             @Override
-            public void handle(long now) {
+            public void handle(long now
+            ) {
                 if (now - prev < 1000000) {
                     return;
                 }
@@ -212,12 +196,29 @@ public class ReitinhakuOhjelma extends Application {
                     }
                 }
             }
-        }.start();
+        }
+                .start();
 
-        primaryStage.setResizable(false);
-        primaryStage.setTitle("Reitinhaku");
+        primaryStage.setResizable(
+                false);
+        primaryStage.setTitle(
+                "Reitinhaku");
         primaryStage.setScene(scene);
+
         primaryStage.show();
+    }
+
+    public void hakujenKeskiarvo() {
+        double keskiarvoDijkstra = 0;
+        double keskiarvoAStar = 0;
+        for (int i = 0; i < DijkstraHakutulokset.koko(); i++) {
+            keskiarvoDijkstra += Double.parseDouble(DijkstraHakutulokset.get(i));
+            keskiarvoAStar += Double.parseDouble(AStarHakutulokset.get(i));
+        }
+        keskiarvoDijkstra /= DijkstraHakutulokset.koko();
+        keskiarvoAStar /= AStarHakutulokset.koko();
+        System.out.println("Dijkstra keskiarvo: " + keskiarvoDijkstra + " solmua per haku");
+        System.out.println("AStar keskiarvo: " + keskiarvoAStar + " solmua per haku");
     }
 
     private void luoKartanValikko(BorderPane ikkuna, GraphicsContext gc, Canvas tilasto) {
@@ -225,17 +226,17 @@ public class ReitinhakuOhjelma extends Application {
         kartanvalikko.setAlignment(Pos.CENTER);
         kartanvalikko.setSpacing(10);
         luoTekstikentat(kartanvalikko, gc);
-        luoRadioNapit(kartanvalikko, gc);
+        luoRadioNapit(kartanvalikko);
         luoNapit(kartanvalikko, gc, ikkuna, tilasto);
         ikkuna.setLeft(kartanvalikko);
 
     }
 
     private void luoTekstikentat(VBox valikko, GraphicsContext gc) {
-        Label lahto = new Label("Lähtökaupunki");
-        lahtokaupunki = new TextField();
-        lahtokaupunki.setOnAction(event -> {
-            solmu1 = verkko.etsiSolmuNimella(lahtokaupunki.getText());
+        Label lahto = new Label("Lähtökaupungit");
+        lahtokaupungit = new TextField();
+        lahtokaupungit.setOnAction(event -> {
+            solmu1 = verkko.etsiSolmuNimella(lahtokaupungit.getText());
             if (solmu1 != null) {
                 piirraTausta(gc);
                 piirraSolmut(gc);
@@ -243,11 +244,11 @@ public class ReitinhakuOhjelma extends Application {
             }
         });
 
-        Label maali = new Label("Kohdekaupunki");
-        this.kohdekaupunki = new TextField();
-        this.kohdekaupunki.setOnAction(event -> {
+        Label maali = new Label("Kohdekaupungit");
+        this.kohdekaupungit = new TextField();
+        this.kohdekaupungit.setOnAction(event -> {
 
-            solmu2 = verkko.etsiSolmuNimella(kohdekaupunki.getText());
+            solmu2 = verkko.etsiSolmuNimella(kohdekaupungit.getText());
             if (solmu1 != null && solmu2 != null) {
                 maalausPino = verkko.shortestPath(solmu1, solmu2);
 
@@ -258,12 +259,12 @@ public class ReitinhakuOhjelma extends Application {
 
         });
         valikko.getChildren().add(lahto);
-        valikko.getChildren().add(lahtokaupunki);
+        valikko.getChildren().add(lahtokaupungit);
         valikko.getChildren().add(maali);
-        valikko.getChildren().add(kohdekaupunki);
+        valikko.getChildren().add(kohdekaupungit);
     }
 
-    private void luoRadioNapit(VBox valikko, GraphicsContext gc) {
+    private void luoRadioNapit(VBox valikko) {
         HBox radioNapitBox = new HBox();
         radioNapitBox.setAlignment(Pos.CENTER);
         hakutapa = new ToggleGroup();
@@ -278,7 +279,6 @@ public class ReitinhakuOhjelma extends Application {
     }
 
     private void luoNapit(VBox valikko, GraphicsContext gc, BorderPane bp, Canvas tilasto) {
-
         HBox napit = new HBox();
         napit.setAlignment(Pos.CENTER);
         napit.setSpacing(30);
@@ -290,37 +290,40 @@ public class ReitinhakuOhjelma extends Application {
 
         });
 
-        reset = new Button("Reset");
+        Button reset = new Button("Reset");
         reset.setOnAction(event -> {
             solmu1 = null;
             solmu2 = null;
             piirraTausta(gc);
-            //  piirraSolmut(gc);
             valinta = false;
             verkko.resetoiMaalausjono();
         });
 
-        hae = new Button("Hae");
+        Button hae = new Button("Hae");
         hae.setOnAction(event -> {
-            if (!lahtokaupunki.getText().isEmpty() && !kohdekaupunki.getText().isEmpty()) {
+            // Toimii vain jos sekä lähtö- että kohdekaupungit nimetty
+            if (!lahtokaupungit.getText().isEmpty() && !kohdekaupungit.getText().isEmpty()) {
                 piirraTausta(gc);
-                //    piirraSolmut(gc);
+                //Hakutavaksi valittu Dijkstra
                 if (hakutapa.getSelectedToggle() == Dijkstra) {
-                    solmu1 = verkko.etsiSolmuNimella(lahtokaupunki.getText());
-                    solmu2 = verkko.etsiSolmuNimella(kohdekaupunki.getText());
+                    solmu1 = verkko.etsiSolmuNimella(lahtokaupungit.getText());
+                    solmu2 = verkko.etsiSolmuNimella(kohdekaupungit.getText());
 
                     if (solmu1 != null && solmu2 != null) {
 
                         maalausPino = verkko.shortestPath(solmu1, solmu2);
+                        verkko.lisaaReittiMaalausjonoon(maalausPino);
                         solmu1 = null;
                         solmu2 = null;
                         valinta = true;
                     }
+                    //Hakutavaksi valittu AStar
                 } else {
-                    solmu1 = verkko.etsiSolmuNimella(lahtokaupunki.getText());
-                    solmu2 = verkko.etsiSolmuNimella(kohdekaupunki.getText());
+                    solmu1 = verkko.etsiSolmuNimella(lahtokaupungit.getText());
+                    solmu2 = verkko.etsiSolmuNimella(kohdekaupungit.getText());
                     if (solmu1 != null && solmu2 != null) {
                         maalausPino = verkko.AStarShortestPath(solmu1, solmu2);
+                        verkko.lisaaReittiMaalausjonoon(maalausPino);
                         solmu1 = null;
                         solmu2 = null;
                         valinta = true;
@@ -329,7 +332,6 @@ public class ReitinhakuOhjelma extends Application {
             }
 
         });
-
         napit.getChildren().add(reset);
         napit.getChildren().add(hae);
         valikko.getChildren().add(napit);
@@ -353,65 +355,51 @@ public class ReitinhakuOhjelma extends Application {
         gc.drawImage(kartta, 0, 0);
     }
 
-    /**
-     * Piirtää verkon kaaret kartalle. Ei tällä hetkellä käytössä
-     *
-     * @param gc Canvas piirtoalustan GraphicsContext
-     */
-    private void piirraKaaret(GraphicsContext gc) {
-        gc.setStroke(Color.BLUE);
-        gc.setLineWidth(1);
-        for (int i = 0; i < verkko.getKaaret().koko(); i++) {
-            double x1 = verkko.getKaaret().get(i).getLahtoSolmu().getX();
-            double y1 = verkko.getKaaret().get(i).getLahtoSolmu().getY();
-            double x2 = verkko.getKaaret().get(i).getPaateSolmu().getX();
-            double y2 = verkko.getKaaret().get(i).getPaateSolmu().getY();
-            double nopeus = verkko.getKaaret().get(i).getNopeus();
-            if (nopeus == 60) {
-                gc.setStroke(Color.BLACK);
-            } else if (nopeus == 80) {
-                gc.setStroke(Color.BLUE);
-            } else {
-                gc.setStroke(Color.RED);
-            }
-            gc.strokeLine(x1, y1, x2, y2);
-
-        }
-    }
-
     private void piirraTilasto(GraphicsContext tilastoGc) {
-        tilastoGc.setFill(Color.WHITE);
+        tilastoGc.setFill(Color.GRAY);
         tilastoGc.fillRect(0, 0, 600, 800);
-        tilastoGc.setStroke(Color.GRAY);
+        tilastoGc.setStroke(Color.BLACK);
         double y = 30;
-        for (int i = 0; i < 10; i++) {
-            tilastoGc.strokeLine(0, y, 600, y);
+        for (int i = 0; i <= 10; i++) {
+            tilastoGc.setFont(new Font(16));
+            tilastoGc.setStroke(Color.BEIGE);
+            tilastoGc.strokeText(i * 41 + "", 0, y);
+            tilastoGc.setStroke(Color.BLACK);
+            tilastoGc.strokeLine(30, y, 600, y);
             y += 74;
         }
-        double x = 30;
-        for (int i = 0; i <= 59; i++) {
-            tilastoGc.strokeLine(x, 0, x, 800);
-            x += 9.15254;
-        }
-        piirraKuvaajat(DijkstraHakutulokset, tilastoGc, Color.RED);
-        piirraKuvaajat(AStarHakutulokset, tilastoGc, Color.BLUE);
+        double x = 0;
+        tilastoGc.setStroke(Color.BEIGE);
+        tilastoGc.setFont(new Font(20));
+        int kaupunginIndeksi = tilastokerroin / 118;
+        Label kaupunginnimi = new Label(kaupungit.get(kaupunginIndeksi));
+        tilastoGc.strokeText(kaupunginnimi.getText(), 270, 25);
+        tilastoGc.setStroke(Color.YELLOW);
+        tilastoGc.strokeText("Dijkstra", 30, 790);
+        tilastoGc.setStroke(Color.LAWNGREEN);
+        tilastoGc.strokeText("AStar", 120, 790);
+        piirraKuvaajat(DijkstraHakutulokset, tilastoGc, Color.YELLOW, 412);
+        piirraKuvaajat(AStarHakutulokset, tilastoGc, Color.LAWNGREEN, 412);
     }
 
-    private void piirraKuvaajat(Lista<String> tuloksia, GraphicsContext gc, Color c) {
+    private void piirraKuvaajat(Lista<String> tuloksia, GraphicsContext gc, Color c, int maara) {
         double x1 = 30;
         double y1 = 0;
-        double x2 = 35.4;
+        double x2 = 35.084745;
         double y2 = 0;
         gc.setStroke(c);
         for (int i = tilastokerroin; i < tilastokerroin + 117; i++) {
             int tulos = Integer.parseInt(tuloksia.get(i));
             int tulos2 = Integer.parseInt(tuloksia.get(i + 1));
 
-            y1 = ((double) tulos / 412) * 740;
-            y2 = ((double) tulos2 / 412) * 740;
-            x1 += 4.57567;
-            x2 += 4.57567;
+            y1 = ((double) tulos / maara) * 740;
+            y2 = ((double) tulos2 / maara) * 740;
+            y1 += 30;
+            y2 += 30;
+
             gc.strokeLine(x1, y1, x2, y2);
+            x1 += 5.084745;
+            x2 += 5.084745;
         }
     }
 
@@ -453,7 +441,7 @@ public class ReitinhakuOhjelma extends Application {
 
         tilastonvalikko.setAlignment(Pos.CENTER);
         tilastonvalikko.setSpacing(30);
-        Label solmutRuudulla = new Label("Helsinki");
+
         Button naytaKartta = new Button("Näytä kartta");
         naytaKartta.setOnAction(event -> {
             borderPane.setCenter(tausta);
@@ -463,14 +451,15 @@ public class ReitinhakuOhjelma extends Application {
         });
         HBox liikkumisnapit = new HBox();
         liikkumisnapit.setAlignment(Pos.CENTER);
+        liikkumisnapit.setPadding(new Insets(0, 0, 0, 20));
+
         Button seuraava = new Button("Seuraava");
         seuraava.setOnAction(event -> {
             tilastokerroin += 118;
             if (tilastokerroin > 13176) {
                 tilastokerroin = 13176;
             }
-            int kaupunginIndeksi = tilastokerroin / 118;
-            solmutRuudulla.setText(kaupunki.get(kaupunginIndeksi));
+
             piirraTilasto(tilasto.getGraphicsContext2D());
         });
         Button edellinen = new Button("Edellinen");
@@ -480,13 +469,10 @@ public class ReitinhakuOhjelma extends Application {
                 tilastokerroin = 0;
 
             }
-            int kaupunginIndeksi = tilastokerroin / 118;
-            solmutRuudulla.setText(kaupunki.get(kaupunginIndeksi));
             piirraTilasto(tilasto.getGraphicsContext2D());
         });
         liikkumisnapit.getChildren().add(edellinen);
         liikkumisnapit.getChildren().add(seuraava);
-        tilastonvalikko.getChildren().add(solmutRuudulla);
         tilastonvalikko.getChildren().add(naytaKartta);
         tilastonvalikko.getChildren().add(liikkumisnapit);
     }

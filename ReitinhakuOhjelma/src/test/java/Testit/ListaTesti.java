@@ -1,8 +1,11 @@
+package Testit;
 
-import junit.framework.Assert;
-import static junit.framework.Assert.assertTrue;
-import org.junit.*;
-import reitinhakuohjelma.rakenne.Lista;
+
+
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
+import tiralabra.reitinhakuohjelma.rakenne.Lista;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,7 +44,7 @@ public class ListaTesti {
 
     @Test
     public void testaaGet() {
-        Lista<Integer> l = new Lista<>();
+        Lista<Integer> l = new Lista<Integer>();
         for (int i = 0; i < 10; i++) {
             l.lisaa(i);
         }
@@ -51,7 +54,7 @@ public class ListaTesti {
 
     @Test
     public void testaaPoisto() {
-        Lista<Integer> l = new Lista<>();
+        Lista<Integer> l = new Lista<Integer>();
         for (int i = 0; i < 10; i++) {
             l.lisaa(i);
         }

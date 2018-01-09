@@ -1,4 +1,4 @@
-package reitinhakuohjelma.rakenne;
+package verkko;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -76,7 +76,7 @@ public class Kaari {
      * @return
      */
     public double getPaino() {
-        return pituus / 60 * nopeus;
+        return pituus *(100 /nopeus);
     }
 
     /**

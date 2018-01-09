@@ -3,22 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reitinhakuohjelma.rakenne;
+package tiralabra.reitinhakuohjelma.rakenne;
 
 /**
  *
  * @author User
+ * @param <T> Pinon sisältämien alkioiden luokka
  */
 public class Pino<T> {
 
     private T[] array;
-    private int koko = 0;
+
     private int paallimmainen = -1;
 
     public Pino() {
         this.array = (T[]) new Object[10];
     }
 
+    /**
+     *
+     * @param a lisää pinon päällimmäiseksi alkion a
+     */
     public void push(T a) {
         paallimmainen++;
         if (paallimmainen >= array.length) {
@@ -28,20 +33,43 @@ public class Pino<T> {
 
     }
 
+    /**
+     *
+     * @return integer pinon taustalla olevan arrayn koko. Voi olla suurempi
+     * kuin pinon koko
+     */
     public int arraynKoko() {
         return this.array.length;
     }
 
+    /**
+     *
+     * @return integer pinon koko
+     */
+    public int koko() {
+        return this.paallimmainen + 1;
+    }
+
+    /**
+     * tyhjentää pinon
+     */
     public void tyhjenna() {
         this.array = (T[]) new Object[10];
-        this.koko = 0;
         this.paallimmainen = -1;
     }
 
+    /**
+     *
+     * @return true jos pino tyhjä, muuten false
+     */
     public boolean onTyhja() {
         return this.paallimmainen == -1;
     }
 
+    /**
+     *  Poistaa pinon päällimmäisen alkion
+     * @return pinon päällimmäisen alkion. Jos pino tyhjä, heittää poikkeuksen.
+     */
     public T pop() {
         if (onTyhja()) {
             throw new IndexOutOfBoundsException("Pino on tyhjä");
@@ -53,6 +81,10 @@ public class Pino<T> {
 
     }
 
+    /**
+     *
+     * @return pinon päällimmäisen alkion. Ei poista sitä pinosta.
+     */
     public T peek() {
         if (onTyhja()) {
             throw new IndexOutOfBoundsException("Pino on tyhjä");
@@ -61,6 +93,9 @@ public class Pino<T> {
         return a;
     }
 
+    /**
+     * kasvattaa pinon arrayn kokoa kaksinkertaiseksi
+     */
     private void kasvata() {
         T[] kopio = (T[]) new Object[array.length * 2];
         kopioiToisestaListasta(kopio);
@@ -68,9 +103,15 @@ public class Pino<T> {
 
     }
 
-
-    private void kopioiToisestaListasta(T[] a) {
-        System.arraycopy(array, 0, a, 0, array.length);
+    /**
+     * kopioi pinon alkiot toiseen arrayhin
+     *
+     * @param a array johon pinon alkiot kopioidaan
+     */
+    public void kopioiToisestaListasta(T[] a) {
+        for (int i = 0; i < paallimmainen; i++) {
+            a[i] = array[i];
+        }
     }
 
 }

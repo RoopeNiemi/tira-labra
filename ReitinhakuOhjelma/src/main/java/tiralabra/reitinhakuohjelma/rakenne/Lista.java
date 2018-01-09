@@ -3,13 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reitinhakuohjelma.rakenne;
-
-import java.util.Arrays;
+package tiralabra.reitinhakuohjelma.rakenne;
 
 /**
  *
  * @author User
+ * @param <T> Listan sisältämien alkioiden luokka
  */
 public class Lista<T> {
 
@@ -21,20 +20,32 @@ public class Lista<T> {
         loppu = 0;
     }
 
+    /**
+     * 
+     * @return listan taustalla olevan arrayn koko integerinä. Voi olla suurempi
+     * kuin listan koko. 
+     */
     public int arraynKoko() {
         return this.array.length;
     }
 
-    public void tulostaLista() {
-        for (int i = 0; i < array.length; i++) {
-            System.out.println(array[i]);
+
+    /**
+     * Kopioi listan sisällön toiseen arrayhin.
+     * @param a array johon listan sisältö kopioidaan
+     */
+    public void kopioiToisestaListasta(T[] a) {
+        for (int i = 0; i < loppu; i++) {
+            a[i] = array[i];
         }
     }
 
-    private void kopioiToisestaListasta(T[] a) {
-        System.arraycopy(array, 0, a, 0, array.length);
-    }
-
+    /**
+     * lisää listaan alkion. Jos alkio ei mahdu arrayhyn, arrayn koko
+     * kaksinkertaistetaan jonka jälkeen alkio lisätään.
+     *
+     * @param a
+     */
     public void lisaa(T a) {
         if (loppu >= array.length) {
             T[] copy = (T[]) new Object[array.length * 2];
@@ -49,6 +60,11 @@ public class Lista<T> {
 
     }
 
+    /**
+     *
+     * @param i
+     * @return
+     */
     public T get(int i) {
         if (i < koko()) {
             return array[i];
@@ -57,10 +73,18 @@ public class Lista<T> {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public int koko() {
         return this.loppu;
     }
 
+    /**
+     *
+     * @param index
+     */
     public void poistaIndeksi(int index) {
         array[index] = null;
         pienenna();
@@ -85,8 +109,8 @@ public class Lista<T> {
         loppu--;
     }
 
-    @Override
-    public String toString() {
-        return Arrays.toString(array);
-    }
+    /**
+     *
+     * @return
+     */
 }

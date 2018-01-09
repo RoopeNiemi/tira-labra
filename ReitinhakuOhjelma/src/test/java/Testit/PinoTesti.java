@@ -1,7 +1,10 @@
+package Testit;
 
-import static junit.framework.Assert.assertTrue;
+
+
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import reitinhakuohjelma.rakenne.Pino;
+import tiralabra.reitinhakuohjelma.rakenne.Pino;
 
 /*
  * To change this license header, choose License Headers in Project Properties.

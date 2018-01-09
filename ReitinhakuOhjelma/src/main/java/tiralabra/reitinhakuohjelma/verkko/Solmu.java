@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reitinhakuohjelma.rakenne;
+package tiralabra.reitinhakuohjelma.verkko;
 
-import java.util.ArrayList;
 import javafx.scene.paint.Color;
+import tiralabra.reitinhakuohjelma.rakenne.Lista;
+
 
 /**
  *
@@ -147,7 +148,7 @@ public class Solmu implements Comparable<Solmu> {
             }
             return -1;
         } else {
-            double erotus = (this.getEtaisyysLahdosta() + this.etaisyysMaalista) - (t.getEtaisyysLahdosta() + t.getEtaisyysMaalista());
+            double erotus = (this.getEtaisyysLahdosta() + this.getEtaisyysMaalista()) - (t.getEtaisyysLahdosta() + t.getEtaisyysMaalista());
             if (erotus > 0) {
                 return 1;
             } else if (erotus == 0) {
@@ -156,5 +157,5 @@ public class Solmu implements Comparable<Solmu> {
             return -1;
         }
     }
-
+    
 }

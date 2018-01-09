@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package reitinhakuohjelma.rakenne;
+package verkko;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Stack;
 import javafx.scene.paint.Color;
+import reitinhakuohjelma.rakenne.Jono;
+import reitinhakuohjelma.rakenne.Joukko;
+import reitinhakuohjelma.rakenne.Lista;
+import reitinhakuohjelma.rakenne.Minimikeko;
+import reitinhakuohjelma.rakenne.Pino;
 
 /**
  *
@@ -21,7 +20,7 @@ public class Verkko {
 
     private Solmu[] verkko = new Solmu[2000];
     private int viimeisinSolmu = 0;
-    private PriorityQueue<Solmu> jono;
+    private Minimikeko prioriteettijono;
     private Joukko kaydyt;
     private Lista<Kaari> kaaret = new Lista<>();
     private Solmu[] reitti = new Solmu[2000];
@@ -89,21 +88,18 @@ public class Verkko {
      * @return hakuprosessin aikana syntynyt maalausjono
      */
     public Jono<Solmu> shortestPath(Solmu a, Solmu b) {
-        long now = System.currentTimeMillis();
+
         rt = new Pino<>();
         Dijkstra(viimeisinSolmu - 1, a, b);
         Solmu r = b;
         while (true) {
             rt.push(r);
-            if (r == a) {
+            if (r.getArvo() == a.getArvo()) {
                 break;
             }
             r = reitti[r.getArvo()];
         }
 
-   
-        long end = System.currentTimeMillis();
-        System.out.println("Dijkstra: " + (end - now) + "ms");
         System.out.println("Dijkstra läpikäytyjä solmuja: " + this.kaydyt.koko());
 
         while (!rt.onTyhja()) {
@@ -134,21 +130,18 @@ public class Verkko {
      * @return hakuprosessin aikana syntynyt maalausjono
      */
     public Jono<Solmu> AStarShortestPath(Solmu a, Solmu b) {
-        long now = System.currentTimeMillis();
+
         rt = new Pino<>();
         AStar(a, b);
         Solmu r = b;
         while (true) {
             rt.push(r);
-            if (r == a) {
+            if (r.getArvo() == a.getArvo()) {
                 break;
             }
             r = reitti[r.getArvo()];
         }
 
-  
-        long end = System.currentTimeMillis();
-        System.out.println("AStar: " + (end - now) + "ms");
         System.out.println("AStar läpikäytyjä solmuja: " + this.kaydyt.koko());
         while (!rt.onTyhja()) {
             Solmu ss = rt.pop();
@@ -209,7 +202,7 @@ public class Verkko {
     }
 
     private void alustaDijkstra(Solmu aloitus) {
-        jono = new PriorityQueue<>();
+        prioriteettijono = new Minimikeko();
         reitti = new Solmu[getVerkonKoko()];
         for (int i = 0; i < getVerkonKoko(); i++) {
             verkko[i].setEtaisyysLahdosta(10000);
@@ -246,6 +239,10 @@ public class Verkko {
         return this.prosessi;
     }
 
+    public Joukko getKaydyt() {
+        return this.kaydyt;
+    }
+
     /**
      * Palauttaa verkon kaaret. Käytetään vain kun halutaan piirtää kaikki
      * kaaret.
@@ -259,12 +256,13 @@ public class Verkko {
     private void AStar(Solmu aloitus, Solmu etsittava) {
         alustaAStar(aloitus, etsittava);
 
-        jono.add(aloitus);
+        prioriteettijono.lisaaKekoon(aloitus);
         while (true) {
-            if (jono.isEmpty()) {
+            if (prioriteettijono.onTyhja()) {
                 break;
             }
-            Solmu u = jono.poll();
+            Solmu u = prioriteettijono.poistaPienin();
+
             if (!kaydyt.sisaltaa(u.getArvo())) {
                 for (int i = 0; i < u.getVieruslista().koko(); i++) {
                     Solmu v = u.getVieruslista().get(i).getPaateSolmu();
@@ -289,7 +287,7 @@ public class Verkko {
 
     private void alustaAStar(Solmu aloitus, Solmu etsittava) {
         kaydyt = new Joukko();
-        jono = new PriorityQueue<>();
+        prioriteettijono = new Minimikeko();
         reitti = new Solmu[getVerkonKoko()];
         for (int i = 0; i < getVerkonKoko(); i++) {
             verkko[i].setEtaisyysLahdosta(10000);
@@ -297,18 +295,19 @@ public class Verkko {
             verkko[i].setMuoto(true);
         }
         verkko[aloitus.getArvo()].setEtaisyysLahdosta(0);
+        verkko[etsittava.getArvo()].setEtaisyysMaalista(0);
     }
 
     private void Dijkstra(int n, Solmu aloitus, Solmu etsittava) {
         kaydyt = new Joukko();
         alustaDijkstra(aloitus);
 
-        jono.add(aloitus);
+        prioriteettijono.lisaaKekoon(aloitus);
         while (true) {
-            if (jono.isEmpty()) {
+            if (prioriteettijono.onTyhja()) {
                 break;
             }
-            Solmu u = jono.poll();
+            Solmu u = prioriteettijono.poistaPienin();
 
             if (!kaydyt.sisaltaa(u.getArvo())) {
 
@@ -329,7 +328,6 @@ public class Verkko {
                 if (u.getArvo() == etsittava.getArvo()) {
                     break;
                 }
-
             }
 
         }
@@ -341,7 +339,7 @@ public class Verkko {
      * @return verkon kaikki solmut arrayssa
      */
     public Solmu[] getSolmut() {
-        return this.verkko;   
+        return this.verkko;
     }
 
     private void relax(Solmu u, Solmu v, double paino) {
@@ -349,7 +347,8 @@ public class Verkko {
 
             v.setEtaisyysLahdosta(u.getEtaisyysLahdosta() + paino);
             reitti[v.getArvo()] = u;
+
         }
-        jono.add(v);
+        prioriteettijono.lisaaKekoon(v);
     }
 }
