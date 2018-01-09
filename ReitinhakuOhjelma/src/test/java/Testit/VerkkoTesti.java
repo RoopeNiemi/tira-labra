@@ -31,16 +31,16 @@ public class VerkkoTesti {
         paaOhjelma.lataaSolmut(verkko);
         paaOhjelma.lataaKaaret(verkko);
         Lista<String> kaupungit = paaOhjelma.haeKaupungit();
-        /*
-        for (int i = 0; i < kaupungit.koko(); i++) {
+
+        /*  for (int i = 0; i < kaupungit.koko(); i++) {
             for (int j = 0; j < kaupungit.koko(); j++) {*/
         Solmu a = verkko.etsiSolmuNimella(kaupungit.get(new Random().nextInt(kaupungit.koko())));
         Solmu b = verkko.etsiSolmuNimella(kaupungit.get(new Random().nextInt(kaupungit.koko())));
 
-        verkko.shortestPath(a, b);
-        Pino<Solmu> DijkstraPino = verkko.haeLyhinReitti();
-        verkko.AStarShortestPath(a, b);
-        Pino<Solmu> AStarPino = verkko.haeLyhinReitti();
+        verkko.hae(a, b, true);
+        Pino<Solmu> DijkstraPino = verkko.viimeisinHaku();
+        verkko.hae(a, b, false);
+        Pino<Solmu> AStarPino = verkko.viimeisinHaku();
         if (DijkstraPino.koko() != AStarPino.koko()) {
             assertTrue(false);
         }
@@ -49,8 +49,8 @@ public class VerkkoTesti {
                 assertTrue(false);
             }
         }
-        /*
-            }
+
+        /* }
         }*/
         assertTrue(true);
     }
@@ -62,20 +62,20 @@ public class VerkkoTesti {
         paaOhjelma.lataaSolmut(verkko);
         paaOhjelma.lataaKaaret(verkko);
         Lista<String> kaupungit = paaOhjelma.haeKaupungit();
-        /*
-        for (int i = 0; i < kaupungit.koko(); i++) {
+
+        /* for (int i = 0; i < kaupungit.koko(); i++) {
             for (int j = 0; j < kaupungit.koko(); j++) {*/
         Solmu a = verkko.etsiSolmuNimella(kaupungit.get(new Random().nextInt(kaupungit.koko())));
         Solmu b = verkko.etsiSolmuNimella(kaupungit.get(new Random().nextInt(kaupungit.koko())));
 
-        verkko.shortestPath(a, b);
-        int DijkstraKaydyt = verkko.getKaydyt().koko();
-        verkko.AStarShortestPath(a, b);
-        int AStarKaydyt = verkko.getKaydyt().koko();
+        verkko.hae(a, b, true);
+        int DijkstraKaydyt = verkko.getReitinhakija().getKaydyt().koko();
+        verkko.hae(a, b, false);
+        int AStarKaydyt = verkko.getReitinhakija().getKaydyt().koko();
         if (AStarKaydyt > DijkstraKaydyt) {
             assertTrue(false);
-        }/*
-            }
+        }
+        /*}
         }*/
         assertTrue(true);
     }
