@@ -10,12 +10,13 @@ Ohjelma koostuu seuraavista pakkauksista:
 2. *tiralabra.reitinhakuohjelma.rakenne*
 
    Sisältää kaikki ohjelman tietorakenteet. Sisältää luokat Pino, Jono, Joukko, Prioriteettijono sekä
-            Lista. 
+            Lista. Näistä Pino, Jono ja Lista ovat geneerisiä. Prioriteettijono toimii solmuilla ja Joukko integereillä. 
             
 3. *tiralabra.reitinhakuohjelma.verkko*
 
    Sisältää Verkko-luokan sekä sen käyttämiseen liittyvät apuluokat Solmu ja Kaari. Sisältää lisäksi
-            reitinhakualgoritmia käyttävän Reitinhakija-luokan.
+            reitinhakualgoritmia käyttävän Reitinhakija-luokan. Verkon kaaret on tallennettu vieruslistamuodossa solmuihin. 
+            
             
 ### Saavutetut aika- ja tilavaativuudet
 
