@@ -1,4 +1,4 @@
-package tiralabra.reitinhakuohjelma;
+package tiralabra.reitinhakuohjelma.kayttoliittyma;
 
 import java.net.URL;
 import java.util.ResourceBundle;

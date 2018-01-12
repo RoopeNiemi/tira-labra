@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tiralabra.reitinhakuohjelma;
+package tiralabra.reitinhakuohjelma.verkko;
 
 import javafx.scene.paint.Color;
 import tiralabra.reitinhakuohjelma.rakenne.Jono;
 import tiralabra.reitinhakuohjelma.rakenne.Joukko;
 import tiralabra.reitinhakuohjelma.rakenne.Pino;
 import tiralabra.reitinhakuohjelma.rakenne.Prioriteettijono;
-import tiralabra.reitinhakuohjelma.verkko.Solmu;
-import tiralabra.reitinhakuohjelma.verkko.Verkko;
+
 
 /**
  *
@@ -102,6 +101,7 @@ public class Reitinhakija {
             }
             r = reitti[r.getArvo()];
         }
+
         return hakuprosessi;
     }
 
@@ -168,6 +168,20 @@ public class Reitinhakija {
 
         }
         prioriteettijono.lisaaKekoon(v);
+    }
+
+    /**
+     * Poistaa yksitellen lyhimmän reitin pinosta solmut ja lisää ne annettuun jonoon
+     * @param s Jono johon lyhin reitti lisätään
+     * @return
+     */
+    public Jono<Solmu> lisaaReittiMaalausjonoon(Jono<Solmu> s) {
+        while (!lyhinReitti.onTyhja()) {
+            Solmu lisattava = lyhinReitti.pop();
+            lisattava.setColor(Color.BLUE);
+            s.lisaaJonoon(lisattava);
+        }
+        return s;
     }
 
     public Prioriteettijono getPrioriteettijono() {

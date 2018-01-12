@@ -37,7 +37,15 @@ public class PrioriteettijonoTesti {
     }
 
     @Test
-    public void testaaHeapify() {
+    public void testaaPoisto(){
+        Prioriteettijono jono= new Prioriteettijono();
+        jono.lisaaKekoon(new Solmu(1,0,0,""));
+        jono.poistaPienin();
+        assertTrue(jono.onTyhja());
+    }
+    
+    @Test
+    public void testaaKekoehdonTarkistus() {
         Prioriteettijono jono = new Prioriteettijono();
         Solmu ensimmainen = new Solmu(0, 0, 0, "");
         ensimmainen.setEtaisyysLahdosta(1);

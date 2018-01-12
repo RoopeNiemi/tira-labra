@@ -25,7 +25,13 @@ public class JonoTesti {
         Jono<Integer> jono = new Jono<>();
         jono.lisaaJonoon(1);
         assertTrue(jono.peek() == 1);
-        assertTrue(!jono.onTyhja());
+    }
+    
+    @Test
+    public void testaaKoko(){
+        Jono<Integer>jono=new Jono<>();
+        jono.lisaaJonoon(1);
+        assertTrue(jono.getKoko()==1);
     }
 
     @Test

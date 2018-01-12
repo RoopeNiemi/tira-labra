@@ -1,7 +1,5 @@
 package Testit;
 
-
-
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import tiralabra.reitinhakuohjelma.rakenne.Pino;
@@ -16,18 +14,25 @@ import tiralabra.reitinhakuohjelma.rakenne.Pino;
  * @author User
  */
 public class PinoTesti {
-
+    
     public PinoTesti() {
-
+        
     }
-
+    
     @Test
     public void testaaLisays() {
         Pino<Integer> pino = new Pino<>();
         pino.push(1);
         assertTrue(pino.peek() == 1);
     }
-
+    
+    @Test
+    public void testaaKoko() {
+        Pino<Integer> pino = new Pino<>();
+        pino.push(1);
+        assertTrue(pino.koko()==1);
+    }
+    
     @Test
     public void testaaPoisto() {
         Pino<Integer> pino = new Pino<>();
@@ -35,7 +40,7 @@ public class PinoTesti {
         assertTrue(pino.pop() == 1);
         assertTrue(pino.onTyhja());
     }
-
+    
     @Test
     public void testaaTyhjenna() {
         Pino<Integer> pino = new Pino<>();
@@ -45,7 +50,7 @@ public class PinoTesti {
         pino.tyhjenna();
         assertTrue(pino.onTyhja());
     }
-
+    
     @Test
     public void testaaArraynKasvatus() {
         Pino<Integer> pino = new Pino<>();

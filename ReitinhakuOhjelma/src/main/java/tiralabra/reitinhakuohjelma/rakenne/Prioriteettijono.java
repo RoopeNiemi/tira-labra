@@ -60,7 +60,7 @@ public class Prioriteettijono {
 
     /**
      *
-     * @param i indeksi josta heapify aloitetaan. Etsii ensin vasemman lapsen ja
+     * @param i indeksi josta kekoehdon tarkistus aloitetaan. Etsii ensin vasemman lapsen ja
      * oikean lapsen indeksin. Jos oikean lapsen indeksi pysyy keon koon
      * sisällä, selvittää kumpi lapsi on pienempi, ja vaihtaa indeksin i alkion
      * ja lapsista pienimmän alkioiden paikkaa keskenään. Kutsuu rekursiivisesti
@@ -69,7 +69,7 @@ public class Prioriteettijono {
      * on, vaihtaa indeksissä i olevan alkion paikkaa vasemman lapsen kanssa,
      * jos vasen lapsi on pienempi
      */
-    public void heapify(int i) {
+    public void tarkistaKekoehto(int i) {
         int vasen = vasen(i);
         int oikea = oikea(i);
         int pienin = 0;
@@ -83,7 +83,7 @@ public class Prioriteettijono {
                 Solmu temp = taulukko[i];
                 taulukko[i] = taulukko[pienin];
                 taulukko[pienin] = temp;
-                heapify(pienin);
+                tarkistaKekoehto(pienin);
             }
         } else if (vasen == koko && taulukko[i].compareTo(taulukko[vasen]) == 1) {
             Solmu temp = taulukko[i];
@@ -101,7 +101,7 @@ public class Prioriteettijono {
             Solmu pienin = taulukko[1];
             taulukko[1] = taulukko[koko];
             koko--;
-            heapify(1);
+            tarkistaKekoehto(1);
             return pienin;
         }
         throw new IndexOutOfBoundsException("Keko on tyhjä");

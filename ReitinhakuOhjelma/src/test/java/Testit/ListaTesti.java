@@ -28,6 +28,16 @@ public class ListaTesti {
         l.lisaa(10);
         assertTrue(l.get(0) == 10);
     }
+    
+    @Test
+    public void testaaKoko(){
+        Lista<Integer> lista=new Lista<>();
+        lista.lisaa(1);
+        assertTrue(lista.koko()==1);
+        lista.lisaa(1);
+        lista.lisaa(2);
+        assertTrue(lista.koko()==3);
+    }
 
     @Test
     public void testaaArraynKasvatus() {
@@ -44,7 +54,7 @@ public class ListaTesti {
 
     @Test
     public void testaaGet() {
-        Lista<Integer> l = new Lista<Integer>();
+        Lista<Integer> l = new Lista<>();
         for (int i = 0; i < 10; i++) {
             l.lisaa(i);
         }
@@ -54,7 +64,7 @@ public class ListaTesti {
 
     @Test
     public void testaaPoisto() {
-        Lista<Integer> l = new Lista<Integer>();
+        Lista<Integer> l = new Lista<>();
         for (int i = 0; i < 10; i++) {
             l.lisaa(i);
         }

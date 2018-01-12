@@ -4,9 +4,6 @@
  * and open the template in the editor.
  */
 package tiralabra.reitinhakuohjelma.verkko;
-
-import tiralabra.reitinhakuohjelma.Reitinhakija;
-import javafx.scene.paint.Color;
 import tiralabra.reitinhakuohjelma.rakenne.*;
 
 /**
@@ -18,7 +15,6 @@ public class Verkko {
     private Solmu[] verkko = new Solmu[412];
     private Lista<Kaari> kaaret = new Lista<>();
     private Pino<Solmu> viimeisinReitti = new Pino<>();
-    private Lista<Long> hakuajat = new Lista<>();
     private Reitinhakija reitinhakija;
 
     /**
@@ -40,27 +36,12 @@ public class Verkko {
         kaaret.lisaa(k);
     }
 
-    public Jono<Solmu> hae(Solmu aloitus, Solmu etsittava, boolean hakutapa) {
-        Jono<Solmu> palautettava = reitinhakija.lyhinReitti(aloitus, etsittava, hakutapa);
-        this.viimeisinReitti = reitinhakija.getLyhinReitti();
-        return palautettava;
-    }
-
     /**
      * Resetoi lyhimmän reitin pinon sekä maalausjonon.
      */
     public void resetoiMaalausjono() {
         this.viimeisinReitti.tyhjenna();
         this.reitinhakija.resetoiProsessijono();
-    }
-
-    public Jono<Solmu> lisaaReittiMaalausjonoon(Jono<Solmu> s) {
-        while (!viimeisinReitti.onTyhja()) {
-            Solmu lisattava = viimeisinReitti.pop();
-            lisattava.setColor(Color.BLUE);
-            s.lisaaJonoon(lisattava);
-        }
-        return s;
     }
 
     /**
