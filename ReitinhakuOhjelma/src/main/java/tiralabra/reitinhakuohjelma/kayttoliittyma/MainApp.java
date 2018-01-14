@@ -1,12 +1,7 @@
 package tiralabra.reitinhakuohjelma.kayttoliittyma;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.InputStream;
+import java.util.Scanner;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -46,20 +41,19 @@ public class MainApp extends Application {
      * @param v verkko johon solmut ladataan
      */
     public void lataaSolmut(Verkko v) {
-        try {
-            Files.lines(Paths.get("src/main/resources/Solmut.txt")).forEach(s -> {
-                String[] solmunTiedot = s.split(",");
-                double x = Double.parseDouble(solmunTiedot[0]);
-                double y = Double.parseDouble(solmunTiedot[1]);
-                String nimi = solmunTiedot[2];
-                int arvo = Integer.parseInt(solmunTiedot[3]);
-                if (!nimi.equals("NULL")) {
-                    kaupungit.lisaa(nimi);
-                }
-                v.lisaaSolmu(x, y, nimi, arvo);
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+        InputStream is = getClass().getClassLoader().getResourceAsStream("Solmut.txt");
+        Scanner lukija = new Scanner(is);
+        while (lukija.hasNextLine()) {
+
+            String[] solmunTiedot = lukija.nextLine().split(",");
+            double x = Double.parseDouble(solmunTiedot[0]);
+            double y = Double.parseDouble(solmunTiedot[1]);
+            String nimi = solmunTiedot[2];
+            int arvo = Integer.parseInt(solmunTiedot[3]);
+            if (!nimi.equals("NULL")) {
+                kaupungit.lisaa(nimi);
+            }
+            v.lisaaSolmu(x, y, nimi, arvo);
         }
     }
 
@@ -69,56 +63,45 @@ public class MainApp extends Application {
      * @param v verkko johon kaaret ladataan
      */
     public void lataaKaaret(Verkko v) {
-        try {
-            Files.lines(Paths.get("src/main/resources/Kaaret.txt")).forEach(k -> {
-                String[] kaarenTiedot = k.split(",");
-                int arvo1 = Integer.parseInt(kaarenTiedot[0]);
-                int arvo2 = Integer.parseInt(kaarenTiedot[1]);
-                double paino = Double.parseDouble(kaarenTiedot[2]);
-                double kaarenNopeus = Double.parseDouble(kaarenTiedot[3]);
-                Solmu solmun1 = v.etsiSolmuArvolla(arvo1);
-                Solmu solmun2 = v.etsiSolmuArvolla(arvo2);
-                solmun1.lisaaViereinenSolmu(solmun2, paino, kaarenNopeus);
-                solmun2.lisaaViereinenSolmu(solmun1, paino, kaarenNopeus);
-                v.lisaaKaari(new Kaari(solmun1, solmun2, paino, kaarenNopeus));
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
+        InputStream is = getClass().getClassLoader().getResourceAsStream("Kaaret.txt");
+        Scanner lukija = new Scanner(is);
+        while (lukija.hasNextLine()) {
+            String[] kaarenTiedot = lukija.nextLine().split(",");
+            int arvo1 = Integer.parseInt(kaarenTiedot[0]);
+            int arvo2 = Integer.parseInt(kaarenTiedot[1]);
+            double paino = Double.parseDouble(kaarenTiedot[2]);
+            double kaarenNopeus = Double.parseDouble(kaarenTiedot[3]);
+            Solmu solmun1 = v.etsiSolmuArvolla(arvo1);
+            Solmu solmun2 = v.etsiSolmuArvolla(arvo2);
+            solmun1.lisaaViereinenSolmu(solmun2, paino, kaarenNopeus);
+            solmun2.lisaaViereinenSolmu(solmun1, paino, kaarenNopeus);
+            v.lisaaKaari(new Kaari(solmun1, solmun2, paino, kaarenNopeus));
+
         }
+
     }
 
     public void lataaHaut() {
-        try {
-            Files.lines(Paths.get("src/main/resources/DijkstraKaydyt.txt")).forEach(k -> {
-                String[] rivi = k.split(",");
-                DijkstraHakutulokset.lisaa(rivi[0]);
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        InputStream is = getClass().getClassLoader().getResourceAsStream("DijkstraKaydyt.txt");
+        Scanner lukija = new Scanner(is);
+        while (lukija.hasNextLine()) {
+            String[] rivi = lukija.nextLine().split(",");
+            DijkstraHakutulokset.lisaa(rivi[0]);
 
-        try {
-            Files.lines(Paths.get("src/main/resources/AStarKaydyt.txt")).forEach(k -> {
-                String[] rivi = k.split(",");
-                AStarHakutulokset.lisaa(rivi[0]);
-            });
-        } catch (IOException ex) {
-            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        is = getClass().getClassLoader().getResourceAsStream("AStarKaydyt.txt");
+        lukija = new Scanner(is);
+        while (lukija.hasNextLine()) {
+            String[] rivi = lukija.nextLine().split(",");
+            AStarHakutulokset.lisaa(rivi[0]);
+        }
     }
 
     public Lista<String> haeKaupungit() {
         return this.kaupungit;
     }
 
-    public void tallenna(List<String> lista, String o) {
-        try {
-            Files.write(Paths.get(o), lista, Charset.forName("UTF-8"));
-        } catch (IOException ex) {
-            Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+
 
     public void haeKaikki() {
 
