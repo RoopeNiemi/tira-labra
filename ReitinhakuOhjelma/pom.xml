@@ -92,11 +92,30 @@
                     <targetClasses>
                         <param>tiralabra.reitinhakuohjelma.rakenne.*</param>
                         <param>tiralabra.reitinhakuohjelma.verkko.Verkko</param>
+                        <param>tiralabra.reitinhakuohjelma.verkko.Reitinhakija</param>
                     </targetClasses>
                     <targetTests>
                         <param>Testit.*</param>
                     </targetTests>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+            </plugin> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.5</version>
             </plugin>
         </plugins>
         <resources>

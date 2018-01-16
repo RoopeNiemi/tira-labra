@@ -1,9 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tiralabra.reitinhakuohjelma.verkko;
+
 import tiralabra.reitinhakuohjelma.rakenne.*;
 
 /**
@@ -32,10 +28,6 @@ public class Verkko {
         return this.viimeisinReitti;
     }
 
-    public void lisaaKaari(Kaari k) {
-        kaaret.lisaa(k);
-    }
-
     /**
      * Resetoi lyhimmän reitin pinon sekä maalausjonon.
      */
@@ -46,7 +38,6 @@ public class Verkko {
 
     /**
      * Lisää verkolle solmun
-     *
      * @param x solmun x-koordinaatti
      * @param y solmun y-koordinaatti
      * @param s solmun nimi
@@ -62,7 +53,7 @@ public class Verkko {
         }
         for (int i = 0; i < 412; i++) {
             Solmu s = verkko[i];
-            if (s.getNimi().equalsIgnoreCase(nimi)) {
+            if (s != null && s.getNimi().equalsIgnoreCase(nimi)) {
                 return s;
             }
         }
@@ -93,7 +84,7 @@ public class Verkko {
     public Solmu etsiSolmuArvolla(int arvo) {
         for (int i = 0; i < 412; i++) {
             Solmu s = verkko[i];
-            if (s.getArvo() == arvo) {
+            if (s != null && s.getArvo() == arvo) {
                 return s;
             }
         }

@@ -64,7 +64,7 @@ public class Prioriteettijono {
      * oikean lapsen indeksin. Jos oikean lapsen indeksi pysyy keon koon
      * sisällä, selvittää kumpi lapsi on pienempi, ja vaihtaa indeksin i alkion
      * ja lapsista pienimmän alkioiden paikkaa keskenään. Kutsuu rekursiivisesti
-     * heapifyta indeksillä, johon indeksin i alkio vaihdettiin. Jos oikea lapsi
+     * itseään indeksillä, johon indeksin i alkio vaihdettiin. Jos oikea lapsi
      * ei ole keon koon sisällä, vertaa onko vasen lapsi keon koon sisällä. Jos
      * on, vaihtaa indeksissä i olevan alkion paikkaa vasemman lapsen kanssa,
      * jos vasen lapsi on pienempi
@@ -93,8 +93,9 @@ public class Prioriteettijono {
     }
 
     /**
-     *
-     * @return
+     * Poistaa prioriteettijonon pienimmän solmun ja kutsuu tarkistaKekoehto() metodia
+     * korjaaman keon rakenne
+     * @return prioriteettijonon pienin solmu
      */
     public Solmu poistaPienin() {
         if (!onTyhja()) {

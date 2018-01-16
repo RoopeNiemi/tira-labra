@@ -21,17 +21,17 @@ public class Lista<T> {
     }
 
     /**
-     * 
+     *
      * @return listan taustalla olevan arrayn koko integerinä. Voi olla suurempi
-     * kuin listan koko. 
+     * kuin listan koko.
      */
     public int arraynKoko() {
         return this.array.length;
     }
 
-
     /**
      * Kopioi listan sisällön toiseen arrayhin.
+     *
      * @param a array johon listan sisältö kopioidaan
      */
     public void kopioiToisestaListasta(T[] a) {
@@ -44,7 +44,7 @@ public class Lista<T> {
      * lisää listaan alkion. Jos alkio ei mahdu arrayhyn, arrayn koko
      * kaksinkertaistetaan jonka jälkeen alkio lisätään.
      *
-     * @param a
+     * @param a listaan lisättävä alkio
      */
     public void lisaa(T a) {
         if (loppu >= array.length) {
@@ -61,9 +61,11 @@ public class Lista<T> {
     }
 
     /**
+     * palauttaa annetussa listan indeksissä olevan alkion, jos indeksi on
+     * listan sisällä
      *
-     * @param i
-     * @return
+     * @param i indeksi josta alkio haetaan
+     * @return annetussa indeksissä olevan alkion
      */
     public T get(int i) {
         if (i < koko()) {
@@ -73,44 +75,8 @@ public class Lista<T> {
 
     }
 
-    /**
-     *
-     * @return
-     */
     public int koko() {
         return this.loppu;
     }
 
-    /**
-     *
-     * @param index
-     */
-    public void poistaIndeksi(int index) {
-        array[index] = null;
-        pienenna();
-    }
-
-    private void pienenna() {
-        int nulls = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == null) {
-                nulls++;
-            }
-        }
-        T[] copy = (T[]) new Object[array.length - nulls];
-        int copyIndex = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] != null) {
-                copy[copyIndex] = array[i];
-                copyIndex++;
-            }
-        }
-        array = copy;
-        loppu--;
-    }
-
-    /**
-     *
-     * @return
-     */
 }

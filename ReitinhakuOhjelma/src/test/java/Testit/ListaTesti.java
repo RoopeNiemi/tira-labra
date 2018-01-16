@@ -1,7 +1,5 @@
 package Testit;
 
-
-
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
@@ -28,15 +26,15 @@ public class ListaTesti {
         l.lisaa(10);
         assertTrue(l.get(0) == 10);
     }
-    
+
     @Test
-    public void testaaKoko(){
-        Lista<Integer> lista=new Lista<>();
+    public void testaaKoko() {
+        Lista<Integer> lista = new Lista<>();
         lista.lisaa(1);
-        assertTrue(lista.koko()==1);
+        assertTrue(lista.koko() == 1);
         lista.lisaa(1);
         lista.lisaa(2);
-        assertTrue(lista.koko()==3);
+        assertTrue(lista.koko() == 3);
     }
 
     @Test
@@ -60,16 +58,5 @@ public class ListaTesti {
         }
         assertTrue(l.get(6) == 6);
 
-    }
-
-    @Test
-    public void testaaPoisto() {
-        Lista<Integer> l = new Lista<>();
-        for (int i = 0; i < 10; i++) {
-            l.lisaa(i);
-        }
-        l.poistaIndeksi(6);
-        assertTrue(l.get(6) == 7);
-        assertTrue(l.koko() == 9);
     }
 }

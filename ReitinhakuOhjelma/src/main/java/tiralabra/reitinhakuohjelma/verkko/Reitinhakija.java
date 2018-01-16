@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tiralabra.reitinhakuohjelma.verkko;
 
 import javafx.scene.paint.Color;
-import tiralabra.reitinhakuohjelma.rakenne.Jono;
-import tiralabra.reitinhakuohjelma.rakenne.Joukko;
-import tiralabra.reitinhakuohjelma.rakenne.Pino;
-import tiralabra.reitinhakuohjelma.rakenne.Prioriteettijono;
-
+import tiralabra.reitinhakuohjelma.rakenne.*;
 
 /**
  *
@@ -39,7 +30,7 @@ public class Reitinhakija {
      *
      * @param aloitus Solmu josta reittiä haetaan
      */
-    public void DijkstraAlustus(Solmu aloitus) {
+    public void dijkstraAlustus(Solmu aloitus) {
         prioriteettijono = new Prioriteettijono();
         reitti = new Solmu[412];
         lyhinReitti = new Pino<>();
@@ -63,7 +54,7 @@ public class Reitinhakija {
      * @param aloitus Solmu josta reittiä haetaan
      * @param etsittava Solmu johon reittiä haetaan
      */
-    public void AStarAlustus(Solmu aloitus, Solmu etsittava) {
+    public void aStarAlustus(Solmu aloitus, Solmu etsittava) {
         kaydyt = new Joukko();
         prioriteettijono = new Prioriteettijono();
         reitti = new Solmu[412];
@@ -124,9 +115,9 @@ public class Reitinhakija {
      */
     public void etsiLyhinReitti(Solmu aloitus, Solmu etsittava, boolean hakutapa) {
         if (hakutapa) {
-            DijkstraAlustus(aloitus);
+            dijkstraAlustus(aloitus);
         } else {
-            AStarAlustus(aloitus, etsittava);
+            aStarAlustus(aloitus, etsittava);
         }
         prioriteettijono.lisaaKekoon(aloitus);
 
@@ -154,34 +145,31 @@ public class Reitinhakija {
                 kopio.setColor(Color.RED);
                 hakuprosessi.lisaaJonoon(kopio);
                 kaydyt.lisaa(u.getArvo());
-
             }
-
         }
     }
 
     private void relax(Solmu u, Solmu v, double paino) {
         if (v.getEtaisyysLahdosta() > u.getEtaisyysLahdosta() + paino) {
-
             v.setEtaisyysLahdosta(u.getEtaisyysLahdosta() + paino);
             reitti[v.getArvo()] = u;
-
         }
         prioriteettijono.lisaaKekoon(v);
     }
 
     /**
-     * Poistaa yksitellen lyhimmän reitin pinosta solmut ja lisää ne annettuun jonoon
+     * Poistaa yksitellen lyhimmän reitin pinosta solmut ja lisää ne annettuun
+     * jonoon
+     *
      * @param s Jono johon lyhin reitti lisätään
-     * @return
      */
-    public Jono<Solmu> lisaaReittiMaalausjonoon(Jono<Solmu> s) {
+    public void lisaaReittiMaalausjonoon(Jono<Solmu> s) {
         while (!lyhinReitti.onTyhja()) {
             Solmu lisattava = lyhinReitti.pop();
             lisattava.setColor(Color.BLUE);
             s.lisaaJonoon(lisattava);
         }
-        return s;
+
     }
 
     public Prioriteettijono getPrioriteettijono() {
@@ -211,5 +199,4 @@ public class Reitinhakija {
     public void resetoiProsessijono() {
         this.hakuprosessi = new Jono<>();
     }
-
 }

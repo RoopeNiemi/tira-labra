@@ -23,14 +23,14 @@ public class MainApp extends Application {
 
     private final Image kartta = new Image(getClass().getResourceAsStream("/kartta.png"));
     private Verkko verkko = new Verkko();
-    private RadioButton Dijkstra, AStar;
+    private RadioButton dijkstra, aStar;
     private ToggleGroup hakutapa;
     private TextField lahtokaupungit, kohdekaupungit;
     private boolean valinta = false;
     private Jono<Solmu> maalausJono = new Jono<>();
     private Lista<String> kaupungit = new Lista<>();
-    private Lista<String> DijkstraHakutulokset = new Lista<>();
-    private Lista<String> AStarHakutulokset = new Lista<>();
+    private Lista<String> dijkstraHakutulokset = new Lista<>();
+    private Lista<String> aStarHakutulokset = new Lista<>();
     private int tilastokerroin = 0;
     private VBox kartanvalikko = new VBox();
     private VBox tilastonvalikko = new VBox();
@@ -75,10 +75,7 @@ public class MainApp extends Application {
             Solmu solmun2 = v.etsiSolmuArvolla(arvo2);
             solmun1.lisaaViereinenSolmu(solmun2, paino, kaarenNopeus);
             solmun2.lisaaViereinenSolmu(solmun1, paino, kaarenNopeus);
-            v.lisaaKaari(new Kaari(solmun1, solmun2, paino, kaarenNopeus));
-
         }
-
     }
 
     public void lataaHaut() {
@@ -86,14 +83,13 @@ public class MainApp extends Application {
         Scanner lukija = new Scanner(is);
         while (lukija.hasNextLine()) {
             String[] rivi = lukija.nextLine().split(",");
-            DijkstraHakutulokset.lisaa(rivi[0]);
-
+            dijkstraHakutulokset.lisaa(rivi[0]);
         }
         is = getClass().getClassLoader().getResourceAsStream("AStarKaydyt.txt");
         lukija = new Scanner(is);
         while (lukija.hasNextLine()) {
             String[] rivi = lukija.nextLine().split(",");
-            AStarHakutulokset.lisaa(rivi[0]);
+            aStarHakutulokset.lisaa(rivi[0]);
         }
     }
 
@@ -101,10 +97,7 @@ public class MainApp extends Application {
         return this.kaupungit;
     }
 
-
-
     public void haeKaikki() {
-
         for (int i = 0; i < kaupungit.koko(); i++) {
             for (int j = 0; j < kaupungit.koko(); j++) {
                 Solmu a = verkko.etsiSolmuNimella(kaupungit.get(i));
@@ -167,14 +160,12 @@ public class MainApp extends Application {
     }
 
     private void luoKartanValikko(BorderPane ikkuna, GraphicsContext kartanGrafiikka, Canvas tilasto) {
-
         kartanvalikko.setAlignment(Pos.CENTER);
         kartanvalikko.setSpacing(10);
         luoTekstikentat(kartanvalikko);
         luoRadioNapit(kartanvalikko);
         luoNapit(kartanvalikko, kartanGrafiikka, ikkuna, tilasto);
         ikkuna.setLeft(kartanvalikko);
-
     }
 
     private void luoTekstikentat(VBox valikko) {
@@ -192,13 +183,13 @@ public class MainApp extends Application {
         HBox radioNapitBox = new HBox();
         radioNapitBox.setAlignment(Pos.CENTER);
         hakutapa = new ToggleGroup();
-        AStar = new RadioButton("AStar");
-        AStar.setToggleGroup(hakutapa);
-        Dijkstra = new RadioButton("Dijkstra");
-        Dijkstra.setToggleGroup(hakutapa);
-        hakutapa.selectToggle(Dijkstra);
-        radioNapitBox.getChildren().add(Dijkstra);
-        radioNapitBox.getChildren().add(AStar);
+        aStar = new RadioButton("AStar");
+        aStar.setToggleGroup(hakutapa);
+        dijkstra = new RadioButton("Dijkstra");
+        dijkstra.setToggleGroup(hakutapa);
+        hakutapa.selectToggle(dijkstra);
+        radioNapitBox.getChildren().add(dijkstra);
+        radioNapitBox.getChildren().add(aStar);
         valikko.getChildren().add(radioNapitBox);
     }
 
@@ -227,7 +218,7 @@ public class MainApp extends Application {
             if (!lahtokaupungit.getText().isEmpty() && !kohdekaupungit.getText().isEmpty()) {
                 piirraTausta(kartanGrafiikka);
                 //Hakutavaksi valittu Dijkstra
-                if (hakutapa.getSelectedToggle() == Dijkstra) {
+                if (hakutapa.getSelectedToggle() == dijkstra) {
                     Solmu solmu1 = verkko.etsiSolmuNimella(lahtokaupungit.getText().trim());
                     Solmu solmu2 = verkko.etsiSolmuNimella(kohdekaupungit.getText().trim());
 
@@ -267,15 +258,15 @@ public class MainApp extends Application {
     }
 
     private void piirraLapikaytyjenSolmujenMaara(GraphicsContext kartanGrafiikka) {
-        kartanGrafiikka.strokeText(verkko.getReitinhakija().getKaydyt().koko() + "", 165, 783);
+        kartanGrafiikka.strokeText(verkko.getReitinhakija().getKaydyt().koko() + "", 185, 783);
     }
 
     private void piirraTilasto(GraphicsContext tilastoGrafiikka) {
         piirraTilastonTausta(tilastoGrafiikka);
         piirraKaupunginNimi(tilastoGrafiikka);
         piirraHakualgoritmienNimet(tilastoGrafiikka);
-        piirraKuvaajat(DijkstraHakutulokset, tilastoGrafiikka, Color.YELLOW, 412);
-        piirraKuvaajat(AStarHakutulokset, tilastoGrafiikka, Color.LAWNGREEN, 412);
+        piirraKuvaajat(dijkstraHakutulokset, tilastoGrafiikka, Color.YELLOW, 412);
+        piirraKuvaajat(aStarHakutulokset, tilastoGrafiikka, Color.LAWNGREEN, 412);
     }
 
     private void piirraTilastonTausta(GraphicsContext tilastoGrafiikka) {

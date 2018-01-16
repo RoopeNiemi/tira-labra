@@ -15,9 +15,11 @@ public class Kaari {
     private double paino, nopeus, pituus;
 
     /**
-     * Kaari solmusta l solmuun p. Kaaren pituus laskettu Verkko-luokan metodilla 
-     * laskeEtaisyys. Kaaret luodaan tekstitiedostosta Kaaret.txt ohjelma käynnistettäessä. 
-     * Kaikki kaaren parametrit on otettu suoraan tekstitiedostoista. 
+     * Kaari solmusta l solmuun p. Kaaren pituus laskettu Verkko-luokan
+     * metodilla laskeEtaisyys. Kaaret luodaan tekstitiedostosta Kaaret.txt
+     * ohjelma käynnistettäessä. Kaikki kaaren parametrit on otettu suoraan
+     * tekstitiedostoista.
+     *
      * @param l Lähtösolmu
      * @param p Päätesolmu
      * @param pituus Kaaren pituus
@@ -31,58 +33,35 @@ public class Kaari {
         this.paino = 0;
     }
 
-    /**
-     *
-     * @return
-     */
     public Solmu getLahtoSolmu() {
         return lahtoSolmu;
     }
 
-    /**
-     *
-     * @return
-     */
     public double getNopeus() {
         return this.nopeus;
     }
 
-    /**
-     *
-     * @param lahtoSolmu
-     */
     public void setLahtoSolmu(Solmu lahtoSolmu) {
         this.lahtoSolmu = lahtoSolmu;
     }
 
-    /**
-     *
-     * @return
-     */
     public Solmu getPaateSolmu() {
         return paateSolmu;
     }
 
-    /**
-     *
-     * @param paateSolmu
-     */
     public void setPaateSolmu(Solmu paateSolmu) {
         this.paateSolmu = paateSolmu;
     }
 
     /**
-     * palauttaa kaaren painon, lasketaan kaavalla kaarenpituus/60*nopeus
-     * @return
+     * palauttaa kaaren painon, lasketaan kaavalla kaarenpituus * (100/nopeus)
+     *
+     * @return kaaren paino
      */
     public double getPaino() {
-        return pituus *(100 /nopeus);
+        return pituus * (100 / nopeus);
     }
 
-    /**
-     *
-     * @param paino
-     */
     public void setPaino(long paino) {
         this.paino = paino;
     }

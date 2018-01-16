@@ -131,12 +131,6 @@ public class Solmu implements Comparable<Solmu> {
         vieruslista.lisaa(new Kaari(this, s, pituus, kaarenNopeus));
     }
 
-    /**
-     * Riippuen boolean muoto-attribuutista, vertailee joko vain etäisyys attribuuttien avulla 
-     * (Dijkstran tapaan), tai etäisyys lähdöstä + etäisyys maalista attribuuttien avulla (AStarin tapaan).
-     * @param t solmu johon verrataan
-     * @return
-     */
     @Override
     public int compareTo(Solmu t) {
         if (!muoto) {

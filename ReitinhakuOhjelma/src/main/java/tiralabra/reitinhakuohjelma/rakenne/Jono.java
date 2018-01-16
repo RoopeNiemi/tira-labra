@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tiralabra.reitinhakuohjelma.rakenne;
-
 
 /**
  *
@@ -76,18 +70,14 @@ public class Jono<T> {
 
     }
 
-    /**
-     *
-     * @return jonon taustalla olevan arrayn koko. Voi olla suurempi kuin jonon
-     * koko.
-     */
     public int getArraynKoko() {
         return this.koko;
     }
 
     /**
+     * tarkistaa onko jono tyhjä
      *
-     * @return
+     * @return true, jos jono on tyhjä, muuten false
      */
     public boolean onTyhja() {
         return this.eka == this.vika;
@@ -115,12 +105,7 @@ public class Jono<T> {
 
     }
 
-    /**
-     *
-     * @return jonon pituus integerinä.
-     */
     public int getKoko() {
-
         return vika - eka;
     }
 
