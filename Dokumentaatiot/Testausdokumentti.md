@@ -35,7 +35,7 @@ Kaikkien hakujen keskiarvo: 190 solmua
 Alin solmumäärä: 0 (solmusta itseensä)             
 Ylin solmumäärä: 411 (Helsinki-Utsjoki)             
 
-#### Astar
+#### A*
 
 Kaikkien hakujen keskiarvo: 73 solmua   
 Alin solmumäärä: 0 (solmusta itseensä)   
