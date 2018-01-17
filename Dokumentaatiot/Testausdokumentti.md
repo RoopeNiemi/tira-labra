@@ -23,6 +23,20 @@ tuottavat saman lyhimmän reitin, sekä sen että A* käy aina enintään yhtä 
 ### Testauksien tuloksia
 Ohjelmassa on mahdollista katsoa tilastoja, joissa viivadiagrammien avulla vertaillaan läpikäytyjen solmujen määrää eri algoritmeilla.
 Tilastot ovat kaupunkikohtaisia, ja niistä näkyy läpikäytyjen solmujen määrä haettaessa reittiä jokaiseen kaupunkiin (mukaan lukien
-lähtökaupunkiin itseensä, jolloin läpikäytävien solmujen määrä on 0). Kaupunkeja on yhteensä 118, eli haettaessa jokaisesta kaupungista jokaiseen kaupunkiin sekä Dijkstralla että A*, tulee hakuja 13 924 per algoritmi eli yhteensä 27 848. Alla muutamia esimerkkejä.
+lähtökaupunkiin itseensä, jolloin läpikäytävien solmujen määrä on 0). Kaupunkeja on yhteensä 118, eli haettaessa jokaisesta kaupungista jokaiseen kaupunkiin sekä Dijkstralla että A*, tulee hakuja 13 924 per algoritmi eli yhteensä 27 848. 
+Alla muutamia esimerkkejä.
 
 ![alt text](https://github.com/RoopeNiemi/tira-labra/blob/master/Kuvia/helsinkiTilasto.png) ![alt text](https://github.com/RoopeNiemi/tira-labra/blob/master/Kuvia/jyvaskylaTilasto.png) ![alt text](https://github.com/RoopeNiemi/tira-labra/blob/master/Kuvia/rovaniemiTilasto.png)
+
+Kaikkien hakujen pohjalta seuraavia tilastoja vielä:
+
+#### Dijkstra                                
+Kaikkien hakujen keskiarvo: 190 solmua            
+Alin solmumäärä: 0 (solmusta itseensä)             
+Ylin solmumäärä: 411 (Helsinki-Utsjoki)             
+
+#### Astar
+
+Kaikkien hakujen keskiarvo: 73 solmua   
+Alin solmumäärä: 0 (solmusta itseensä)   
+Ylin solmumäärä: 405 (Helsinki-Utsjoki)   
