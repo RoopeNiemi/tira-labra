@@ -21,7 +21,7 @@ Ohjelma koostuu seuraavista pakkauksista:
 ### Saavutetut aika- ja tilavaativuudet
 
 ### Suorituskyky ja O-analyysivertailut
-Koska sekä A* että Dijkstra käyttävät molemmat samaa hakualgoritmia, eivät algoritmien aikavaativuudet oikeastaan eroa toisistaan. Pieni ero löytyy A* ja Dijkstran alustusvaiheessa, sillä A* alustuksen yhteydessä lasketaan jokaiselle solmulle lisäksi etäisyys maalista, mikä lisää hieman aikavaativuutta. Kuitenkin molemmat pysyvät alustusvaiheessa aikavaativuudessa O(V), missä V on solmujen määrä. 
+Koska sekä A* että Dijkstra käyttävät molemmat samaa hakualgoritmia, eivät algoritmien aikavaativuudet oikeastaan eroa toisistaan. Pieni ero löytyy A* ja Dijkstran alustusvaiheessa, sillä A* alustuksen yhteydessä lasketaan jokaiselle solmulle lisäksi etäisyys maalista, mikä lisää hieman aikavaativuutta. Kuitenkin molemmat pysyvät alustusvaiheessa aikavaativuudessa O(V), missä V on solmujen määrä. Tarkemmin suorituskykyvertailusta testausdokumentissa.
 
 ### Mahdolliset puutteet ja parannusehdotukset
 
