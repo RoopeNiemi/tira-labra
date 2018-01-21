@@ -1,6 +1,7 @@
 # tira-labra
 Tira-labran repositorio, vuodenvaihde 2017-2018. Aiheena A* ja Dijkstran algoritmien toiminnan vertailu.
 
+[Käyttöohje](https://github.com/RoopeNiemi/tira-labra/blob/master/Dokumentaatiot/K%C3%A4ytt%C3%B6ohje.md)
 
 [Määrittelydokumentti](https://github.com/RoopeNiemi/tira-labra/blob/master/Dokumentaatiot/Määrittelydokumentti.md)
 
