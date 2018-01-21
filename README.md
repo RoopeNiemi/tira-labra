@@ -21,6 +21,8 @@ Tira-labran repositorio, vuodenvaihde 2017-2018. Aiheena A* ja Dijkstran algorit
 
 [Viikkoraportti 5](https://github.com/RoopeNiemi/tira-labra/blob/master/Dokumentaatiot/Viikkoraportti5.md)
 
+[Viikkoraportti 6](https://github.com/RoopeNiemi/tira-labra/blob/master/Dokumentaatiot/Viikkoraportti6.md)
+
 
 
 
